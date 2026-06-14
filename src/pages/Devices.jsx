@@ -55,12 +55,12 @@ export function Devices() {
         actions={<Button iconLeft={<Plus size={16} />} onClick={() => setAdding(true)}>Add device</Button>} />
 
       <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
-        <Input placeholder="Search name, serial, model, user…" icon={<Search size={16} />}
+        <Input placeholder="Search name, serial, model, user…" aria-label="Search devices" icon={<Search size={16} />}
           value={q} onChange={(e) => clearParamsOn(setQ)(e.target.value)} wrapStyle={{ width: 290 }} />
-        <Select value={type} onChange={(e) => clearParamsOn(setType)(e.target.value)} style={{ width: 160 }}
+        <Select value={type} onChange={(e) => clearParamsOn(setType)(e.target.value)} style={{ width: 160 }} aria-label="Filter by type"
           options={[{ value: "all", label: "All types" },
             ...Object.entries(DEVICE_TYPES).map(([v, t]) => ({ value: v, label: t.label }))]} />
-        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 160 }}
+        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 160 }} aria-label="Filter by status"
           options={[{ value: "all", label: "All statuses" },
             ...Object.entries(DEVICE_STATUS).map(([v, s]) => ({ value: v, label: s.label }))]} />
         <span style={{ alignSelf: "center", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-3)" }}>

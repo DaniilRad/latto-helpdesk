@@ -4,7 +4,7 @@ import { Button } from "../core/Button.jsx";
 /**
  * Lätto Dialog — a centered modal over a dark scrim. Controlled via `open`.
  * Provide title, children (body), and an actions array rendered as buttons.
- * action shape: { label, variant?, onClick?, autoFocus? }
+ * action shape: { label, variant?, onClick?, autoFocus?, disabled? }
  */
 export function Dialog({ open, onClose, title, description, children, actions = [], width = 440, ...rest }) {
   React.useEffect(() => {
@@ -56,7 +56,8 @@ export function Dialog({ open, onClose, title, description, children, actions = 
         {actions.length > 0 && (
           <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--space-2)", marginTop: "var(--space-5)" }}>
             {actions.map((a, i) => (
-              <Button key={i} variant={a.variant || (i === actions.length - 1 ? "primary" : "ghost")} onClick={a.onClick} autoFocus={a.autoFocus}>
+              <Button key={i} variant={a.variant || (i === actions.length - 1 ? "primary" : "ghost")}
+                onClick={a.onClick} autoFocus={a.autoFocus} disabled={a.disabled}>
                 {a.label}
               </Button>
             ))}

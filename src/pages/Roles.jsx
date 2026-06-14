@@ -192,12 +192,12 @@ function RulesTab() {
 }
 
 function GroupsTab() {
-  const { groups, users, allTickets, addGroup, saveGroup, deleteGroup } = useStore();
+  const { groups, users, allTickets, addGroup, saveGroup, deleteGroup, toast } = useStore();
   const [adding, setAdding] = React.useState(false);
   const [form, setForm] = React.useState({ name: "", description: "" });
 
   const submit = () => {
-    if (!form.name.trim()) return;
+    if (!form.name.trim()) { toast("danger", "Name required", "Give the team a name."); return; }
     addGroup({ name: form.name.trim(), description: form.description.trim() });
     setAdding(false); setForm({ name: "", description: "" });
   };
@@ -211,6 +211,11 @@ function GroupsTab() {
         <Button size="sm" iconLeft={<Plus size={15} />} onClick={() => setAdding(true)}>Add team</Button>
       </div>
 
+      {groups.length === 0 && (
+        <Card padding="28px" style={{ textAlign: "center", color: "var(--text-3)", fontSize: 14 }}>
+          No resolver teams yet. Add one to start routing tickets.
+        </Card>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
         {groups.map((g) => {
           const members = users.filter((u) => g.members.includes(u.id));
@@ -260,7 +265,7 @@ function GroupsTab() {
           { label: "Create", variant: "primary", onClick: submit },
         ]}>
         <div style={{ display: "grid", gap: 14 }}>
-          <Field label="Team name"><Input value={form.name} autoFocus
+          <Field label="Team name" required><Input value={form.name} autoFocus
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. Network team" /></Field>
           <Field label="Description"><Input value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} placeholder="What this team handles" /></Field>
@@ -271,14 +276,14 @@ function GroupsTab() {
 }
 
 function EntitiesTab() {
-  const { entities, users, allDevices, allTickets, addEntity, saveEntity, deleteEntity } = useStore();
+  const { entities, users, allDevices, allTickets, addEntity, saveEntity, deleteEntity, toast } = useStore();
   const [dialog, setDialog] = React.useState(null); // null | "new" | entity
   const [form, setForm] = React.useState({ name: "", description: "" });
 
   const openNew = () => { setForm({ name: "", description: "" }); setDialog("new"); };
   const openEdit = (e) => { setForm({ name: e.name, description: e.description || "" }); setDialog(e); };
   const submit = () => {
-    if (!form.name.trim()) return;
+    if (!form.name.trim()) { toast("danger", "Name required", "Give the entity a name."); return; }
     if (dialog === "new") addEntity({ name: form.name.trim(), description: form.description.trim() });
     else saveEntity(dialog.id, { name: form.name.trim(), description: form.description.trim() });
     setDialog(null);
@@ -334,7 +339,7 @@ function EntitiesTab() {
           { label: dialog === "new" ? "Create" : "Save", variant: "primary", onClick: submit },
         ]}>
         <div style={{ display: "grid", gap: 14 }}>
-          <Field label="Name"><Input value={form.name} autoFocus
+          <Field label="Name" required><Input value={form.name} autoFocus
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. Subsidiary North" /></Field>
           <Field label="Description"><Input value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} /></Field>

@@ -10,12 +10,14 @@ import { useStore } from "../lib/store.jsx";
  * pickers — they file for themselves).
  */
 export function TicketDialog({ open, onClose, onCreated }) {
-  const { users, devices, persona, hasPerm, addTicket } = useStore();
+  const { users, devices, persona, hasPerm, addTicket, toast } = useStore();
   const full = hasPerm("tickets.edit");
   const [form, setForm] = React.useState({});
+  const [attempted, setAttempted] = React.useState(false);
 
   React.useEffect(() => {
     if (open) {
+      setAttempted(false);
       setForm({
         title: "", description: "", category: "incident",
         impact: "medium", urgency: "medium",
@@ -26,9 +28,14 @@ export function TicketDialog({ open, onClose, onCreated }) {
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const priority = computePriority(form.impact, form.urgency);
+  const titleMissing = !form.title?.trim();
 
   const submit = () => {
-    if (!form.title?.trim()) return;
+    if (titleMissing) {
+      setAttempted(true);
+      toast("danger", "Title required", "Give the ticket a short title before creating it.");
+      return;
+    }
     const id = addTicket({
       title: form.title.trim(), description: form.description.trim(),
       category: form.category, impact: form.impact, urgency: form.urgency,
@@ -51,8 +58,10 @@ export function TicketDialog({ open, onClose, onCreated }) {
         { label: "Create ticket", variant: "primary", onClick: submit },
       ]}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        <Field label="Title" span={2}>
-          <Input value={form.title || ""} onChange={set("title")} placeholder="Short summary of the problem" autoFocus />
+        <Field label="Title" span={2} required
+          error={attempted && titleMissing ? "Title is required" : null}>
+          <Input value={form.title || ""} onChange={set("title")} placeholder="Short summary of the problem"
+            invalid={attempted && titleMissing} autoFocus />
         </Field>
         <Field label="Description" span={2}>
           <Textarea value={form.description || ""} onChange={set("description")}

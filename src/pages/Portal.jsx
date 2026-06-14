@@ -37,7 +37,7 @@ export function Portal() {
             Search the knowledge base first — or just open a ticket.
           </p>
           <div style={{ display: "flex", gap: 10, justifyContent: "center", alignItems: "center" }}>
-            <Input placeholder="Search help articles…" icon={<Search size={16} />} size="lg"
+            <Input placeholder="Search help articles…" aria-label="Search help articles" icon={<Search size={16} />} size="lg"
               value={q} onChange={(e) => setQ(e.target.value)} wrapStyle={{ width: 380 }} />
             <Button size="lg" iconLeft={<Plus size={17} />} onClick={() => setCreating(true)}>New ticket</Button>
           </div>
@@ -55,11 +55,9 @@ export function Portal() {
               </p>
             ) : mine.slice(0, 5).map((t, i) => (
               <div key={t.id} {...rowActivation(() => nav(`/tickets/${t.id}`))}
-                aria-label={`Ticket ${t.number}: ${t.title}`}
+                aria-label={`Ticket ${t.number}: ${t.title}`} className="latto-rowhover"
                 style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 18px", cursor: "pointer",
-                  borderTop: i === 0 ? "none" : "1px solid var(--border-faint)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                  borderTop: i === 0 ? "none" : "1px solid var(--border-faint)" }}>
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--accent-text)", flex: "0 0 auto" }}>{t.number}</span>
                 <span style={{ fontSize: 13, color: "var(--text-1)", flex: 1, overflow: "hidden",
                   textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.title}</span>
@@ -85,11 +83,9 @@ export function Portal() {
               </p>
             ) : hits.map((a, i) => (
               <div key={a.id} {...rowActivation(() => nav(`/kb/${a.id}`))}
-                aria-label={`Article: ${a.title}`}
+                aria-label={`Article: ${a.title}`} className="latto-rowhover"
                 style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 18px", cursor: "pointer",
-                  borderTop: i === 0 ? "none" : "1px solid var(--border-faint)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                  borderTop: i === 0 ? "none" : "1px solid var(--border-faint)" }}>
                 <span style={{ fontSize: 13, color: "var(--text-1)", flex: 1, overflow: "hidden",
                   textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.title}</span>
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)", flex: "0 0 auto" }}>

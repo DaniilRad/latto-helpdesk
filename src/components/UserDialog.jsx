@@ -11,22 +11,30 @@ const EMPTY = {
 
 /** Add/edit AD user dialog. Pass `user` to edit, omit to create. */
 export function UserDialog({ open, onClose, user }) {
-  const { addUser, saveUser } = useStore();
+  const { addUser, saveUser, toast } = useStore();
   const [form, setForm] = React.useState(EMPTY);
   const [groupsText, setGroupsText] = React.useState("");
+  const [attempted, setAttempted] = React.useState(false);
   const editing = Boolean(user);
 
   React.useEffect(() => {
     if (open) {
       setForm(user ? { ...EMPTY, ...user } : EMPTY);
       setGroupsText(user ? (user.groups || []).join(", ") : "Domain Users");
+      setAttempted(false);
     }
   }, [open, user]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const nameMissing = !form.displayName.trim();
+  const samMissing = !form.sam.trim();
 
   const submit = () => {
-    if (!form.displayName.trim() || !form.sam.trim()) return;
+    if (nameMissing || samMissing) {
+      setAttempted(true);
+      toast("danger", "Missing fields", "Display name and sAMAccountName are both required.");
+      return;
+    }
     const payload = {
       ...form,
       groups: groupsText.split(",").map((g) => g.trim()).filter(Boolean),
@@ -45,11 +53,14 @@ export function UserDialog({ open, onClose, user }) {
         { label: editing ? "Save" : "Add user", variant: "primary", onClick: submit },
       ]}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        <Field label="Display name">
-          <Input value={form.displayName} onChange={set("displayName")} placeholder="Anna Koval" autoFocus />
+        <Field label="Display name" required
+          error={attempted && nameMissing ? "Display name is required" : null}>
+          <Input value={form.displayName} onChange={set("displayName")} placeholder="Anna Koval"
+            invalid={attempted && nameMissing} autoFocus />
         </Field>
-        <Field label="sAMAccountName">
-          <Input value={form.sam} onChange={set("sam")} placeholder="a.koval" />
+        <Field label="sAMAccountName" required
+          error={attempted && samMissing ? "Account name is required" : null}>
+          <Input value={form.sam} onChange={set("sam")} placeholder="a.koval" invalid={attempted && samMissing} />
         </Field>
         <Field label="Email">
           <Input type="email" value={form.email} onChange={set("email")} placeholder="a.koval@latto.io" />

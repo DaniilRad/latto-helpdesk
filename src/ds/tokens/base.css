@@ -41,6 +41,16 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   border-radius: var(--radius-sm);
 }
 
+/* row hover — CSS-driven so it survives re-renders and concurrent rendering,
+   and also lights up on keyboard focus for parity with mouse hover */
+.latto-rowhover {
+  transition: background var(--dur-fast) var(--ease);
+}
+.latto-rowhover:hover,
+.latto-rowhover:focus-visible {
+  background: var(--surface-2);
+}
+
 /* mono eyebrow / label helper used throughout the system */
 .latto-eyebrow {
   font-family: var(--font-mono);

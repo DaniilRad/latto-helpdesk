@@ -12,18 +12,24 @@ const EMPTY = {
 
 /** Add/edit device dialog. Pass `device` to edit, omit to create. */
 export function DeviceDialog({ open, onClose, device }) {
-  const { users, addDevice, saveDevice } = useStore();
+  const { users, addDevice, saveDevice, toast } = useStore();
   const [form, setForm] = React.useState(EMPTY);
+  const [attempted, setAttempted] = React.useState(false);
   const editing = Boolean(device);
 
   React.useEffect(() => {
-    if (open) setForm(device ? { ...EMPTY, ...device } : EMPTY);
+    if (open) { setForm(device ? { ...EMPTY, ...device } : EMPTY); setAttempted(false); }
   }, [open, device]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target ? e.target.value : e }));
+  const nameMissing = !form.name.trim();
 
   const submit = () => {
-    if (!form.name.trim()) return;
+    if (nameMissing) {
+      setAttempted(true);
+      toast("danger", "Name required", "A device needs a hostname or name.");
+      return;
+    }
     const payload = { ...form, assignedTo: form.assignedTo || null };
     if (editing) saveDevice(device.id, payload, payload.name);
     else addDevice(payload);
@@ -44,8 +50,10 @@ export function DeviceDialog({ open, onClose, device }) {
         { label: editing ? "Save" : "Add device", variant: "primary", onClick: submit },
       ]}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        <Field label="Hostname / name">
-          <Input value={form.name} onChange={set("name")} placeholder="LT-NB-007" autoFocus />
+        <Field label="Hostname / name" required
+          error={attempted && nameMissing ? "Name is required" : null}>
+          <Input value={form.name} onChange={set("name")} placeholder="LT-NB-007"
+            invalid={attempted && nameMissing} autoFocus />
         </Field>
         <Field label="Type">
           <Select value={form.type} onChange={set("type")} style={{ width: "100%" }}

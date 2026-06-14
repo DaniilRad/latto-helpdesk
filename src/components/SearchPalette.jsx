@@ -58,7 +58,7 @@ export function SearchPalette() {
 
   return (
     <div ref={boxRef} style={{ position: "relative" }}>
-      <Input placeholder="Search devices, users, software…" icon={<Search size={16} />} size="sm"
+      <Input placeholder="Search devices, users, software…" aria-label="Global search" icon={<Search size={16} />} size="sm"
         wrapStyle={{ width: 270 }} value={q}
         onChange={(e) => { setQ(e.target.value); setOpen(true); }}
         onFocus={() => setOpen(true)}

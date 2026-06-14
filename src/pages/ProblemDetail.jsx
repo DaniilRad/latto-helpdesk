@@ -125,11 +125,9 @@ export function ProblemDetail() {
                 const req = userById(t.requesterId);
                 return (
                   <div key={t.id} {...rowActivation(() => nav(`/tickets/${t.id}`))}
-                    aria-label={`Ticket ${t.number}: ${t.title}`}
+                    aria-label={`Ticket ${t.number}: ${t.title}`} className="latto-rowhover"
                     style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px",
-                    borderTop: "1px solid var(--border-faint)", cursor: "pointer" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
+                    borderTop: "1px solid var(--border-faint)", cursor: "pointer" }}>
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--accent-text)", flex: "0 0 auto" }}>{t.number}</span>
                     <PriorityBadge priority={t.priority} />
                     <span style={{ fontSize: 13, color: "var(--text-1)", flex: 1, overflow: "hidden",

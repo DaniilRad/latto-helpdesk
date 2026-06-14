@@ -1,12 +1,12 @@
 import React from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button, Badge, Dialog, Input, Select } from "../ds";
-import { PageHeader, TableCard, HoverRow, tdStyle, Field, SortableTh, useSort } from "../components/bits.jsx";
+import { PageHeader, TableCard, HoverRow, tdStyle, Field, SortableTh, useSort, TableEmptyRow } from "../components/bits.jsx";
 import { CONTRACT_TYPES, formatDate, daysUntil } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
 
 export function Contracts() {
-  const { contracts, addContract, deleteContract, hasPerm } = useStore();
+  const { contracts, addContract, deleteContract, hasPerm, toast } = useStore();
   const canEdit = hasPerm("devices.write");
   const [adding, setAdding] = React.useState(false);
   const [form, setForm] = React.useState({});
@@ -19,7 +19,7 @@ export function Contracts() {
   const sort = useSort(contracts, getters, "end", 1);
 
   const submit = () => {
-    if (!form.name?.trim()) return;
+    if (!form.name?.trim()) { toast("danger", "Name required", "Give the contract or certificate a name."); return; }
     addContract({ name: form.name.trim(), type: form.type || "contract", vendor: form.vendor || "",
       number: form.number || "", startDate: form.startDate || "", endDate: form.endDate || "",
       cost: form.cost || "", notes: form.notes || "" });
@@ -47,6 +47,7 @@ export function Contracts() {
           <th style={{ ...tdStyle, borderBottom: "1px solid var(--border)" }} />
         </tr></thead>
         <tbody>
+          {sort.sorted.length === 0 && <TableEmptyRow colSpan={7}>No contracts or certificates yet.</TableEmptyRow>}
           {sort.sorted.map((c) => {
             const days = daysUntil(c.endDate);
             return (
@@ -93,7 +94,7 @@ export function Contracts() {
               options={Object.entries(CONTRACT_TYPES).map(([v, t]) => ({ value: v, label: t.label }))} />
           </Field>
           <Field label="Vendor"><Input value={form.vendor || ""} onChange={set("vendor")} /></Field>
-          <Field label="Name" span={2}><Input value={form.name || ""} onChange={set("name")} autoFocus /></Field>
+          <Field label="Name" span={2} required><Input value={form.name || ""} onChange={set("name")} autoFocus /></Field>
           <Field label="Number / CN"><Input value={form.number || ""} onChange={set("number")} placeholder="*.latto.io" /></Field>
           <Field label="Cost"><Input value={form.cost || ""} onChange={set("cost")} placeholder="€ 180 / y" /></Field>
           <Field label="Starts"><Input type="date" value={form.startDate || ""} onChange={set("startDate")} /></Field>

@@ -44,12 +44,12 @@ export function UsersPage() {
         actions={<Button iconLeft={<Plus size={16} />} onClick={() => setAdding(true)}>Add user</Button>} />
 
       <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
-        <Input placeholder="Search name, sam, email…" icon={<Search size={16} />}
+        <Input placeholder="Search name, sam, email…" aria-label="Search users" icon={<Search size={16} />}
           value={q} onChange={(e) => setQ(e.target.value)} wrapStyle={{ width: 270 }} />
-        <Select value={dept} onChange={(e) => setDept(e.target.value)} style={{ width: 170 }}
+        <Select value={dept} onChange={(e) => setDept(e.target.value)} style={{ width: 170 }} aria-label="Filter by department"
           options={[{ value: "all", label: "All departments" },
             ...departments.map((d) => ({ value: d, label: d }))]} />
-        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 150 }}
+        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 150 }} aria-label="Filter by status"
           options={[{ value: "all", label: "All statuses" },
             ...Object.entries(USER_STATUS).map(([v, s]) => ({ value: v, label: s.label }))]} />
         <span style={{ alignSelf: "center", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-3)" }}>

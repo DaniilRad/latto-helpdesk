@@ -79,13 +79,13 @@ export function Tickets() {
       )}
 
       <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
-        <Input placeholder="Search tickets…" icon={<Search size={16} />} value={q}
+        <Input placeholder="Search tickets…" aria-label="Search tickets" icon={<Search size={16} />} value={q}
           onChange={(e) => setQ(e.target.value)} wrapStyle={{ width: 260 }} />
-        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 160 }}
+        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 160 }} aria-label="Filter by status"
           options={[{ value: "open", label: "Open (active)" }, { value: "all", label: "All statuses" },
             ...Object.entries(TICKET_STATUS).map(([v, s]) => ({ value: v, label: s.label }))]} />
         {seeAll && (
-          <Select value={assignee} onChange={(e) => setAssignee(e.target.value)} style={{ width: 160 }}
+          <Select value={assignee} onChange={(e) => setAssignee(e.target.value)} style={{ width: 160 }} aria-label="Filter by assignee"
             options={[{ value: "all", label: "Any assignee" }, { value: "me", label: "Assigned to me" },
               { value: "none", label: "Unassigned" }]} />
         )}

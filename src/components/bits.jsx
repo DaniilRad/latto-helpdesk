@@ -26,12 +26,20 @@ export function PageHeader({ title, eyebrow, actions, children }) {
   );
 }
 
-/** Form field: mono label above a control. */
-export function Field({ label, children, span = 1 }) {
+/** Form field: mono label above a control, with optional required mark + error. */
+export function Field({ label, children, span = 1, required = false, error = null }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6, gridColumn: `span ${span}` }}>
-      <Eyebrow>{label}</Eyebrow>
+      <Eyebrow>
+        {label}
+        {required && <span style={{ color: "var(--danger)", marginLeft: 4 }} aria-hidden="true">*</span>}
+      </Eyebrow>
       {children}
+      {error && (
+        <span role="alert" style={{ fontSize: 12, color: "var(--danger)", fontFamily: "var(--font-sans)" }}>
+          {error}
+        </span>
+      )}
     </label>
   );
 }
@@ -68,18 +76,29 @@ export function useSort(rows, getters, defaultKey = null, defaultDir = 1) {
   return { sorted, sortKey: key, sortDir: dir, toggle };
 }
 
-/** Clickable, sort-aware table header cell. */
+/** Clickable, sort-aware table header cell. Shows a dim ⇅ affordance when
+ *  inactive and a bold accent ↑/↓ when it's the active sort column. */
 export function SortableTh({ k, sort, children, align = "left", style = {} }) {
   const active = sort.sortKey === k;
   return (
     <th
       onClick={() => sort.toggle(k)}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sort.toggle(k); } }}
+      role="button"
+      tabIndex={0}
+      aria-sort={active ? (sort.sortDir === 1 ? "ascending" : "descending") : "none"}
+      title="Sort by this column"
       style={{ ...thStyle, textAlign: align, cursor: "pointer", userSelect: "none",
         color: active ? "var(--accent-text)" : "var(--text-3)", ...style }}
       onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "var(--text-1)"; }}
       onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "var(--text-3)"; }}
     >
-      {children}{active ? (sort.sortDir === 1 ? " ↑" : " ↓") : ""}
+      {children}
+      <span aria-hidden="true" style={{ marginLeft: 5, fontSize: 11,
+        color: active ? "var(--accent-text)" : "var(--text-3)",
+        opacity: active ? 1 : 0.45, fontWeight: active ? 700 : 400 }}>
+        {active ? (sort.sortDir === 1 ? "↑" : "↓") : "⇅"}
+      </span>
     </th>
   );
 }
@@ -122,12 +141,23 @@ export function TableCard({ children }) {
 export function HoverRow({ onClick, children }) {
   return (
     <tr
-      style={{ transition: "background var(--dur-fast) var(--ease)", cursor: onClick ? "pointer" : "default" }}
+      className="latto-rowhover"
+      style={{ cursor: onClick ? "pointer" : "default" }}
       onClick={onClick}
-      onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
     >
       {children}
+    </tr>
+  );
+}
+
+/** A full-width "no rows" message inside a table body. */
+export function TableEmptyRow({ colSpan, children = "Nothing here yet." }) {
+  return (
+    <tr>
+      <td colSpan={colSpan} style={{ ...tdStyle, textAlign: "center", color: "var(--text-3)",
+        padding: "26px 14px", fontFamily: "var(--font-sans)", borderBottom: "none" }}>
+        {children}
+      </td>
     </tr>
   );
 }

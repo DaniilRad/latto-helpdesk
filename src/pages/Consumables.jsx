@@ -1,12 +1,12 @@
 import React from "react";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { Button, Badge, Dialog, Input, Select, IconButton } from "../ds";
-import { PageHeader, TableCard, HoverRow, tdStyle, Field, SortableTh, useSort } from "../components/bits.jsx";
+import { PageHeader, TableCard, HoverRow, tdStyle, Field, SortableTh, useSort, TableEmptyRow } from "../components/bits.jsx";
 import { CONSUMABLE_TYPES } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
 
 export function Consumables() {
-  const { consumables, addConsumable, deleteConsumable, adjustStock, hasPerm } = useStore();
+  const { consumables, addConsumable, deleteConsumable, adjustStock, hasPerm, toast } = useStore();
   const canEdit = hasPerm("devices.write");
   const [adding, setAdding] = React.useState(false);
   const [form, setForm] = React.useState({});
@@ -19,7 +19,7 @@ export function Consumables() {
   const sort = useSort(consumables, getters, "name", 1);
 
   const submit = () => {
-    if (!form.name?.trim()) return;
+    if (!form.name?.trim()) { toast("danger", "Name required", "Give the consumable a name."); return; }
     addConsumable({ name: form.name.trim(), type: form.type || "other",
       stock: Number(form.stock) || 0, min: Number(form.min) || 0,
       location: form.location || "", notes: form.notes || "" });
@@ -50,6 +50,7 @@ export function Consumables() {
           <th style={{ ...tdStyle, borderBottom: "1px solid var(--border)" }} />
         </tr></thead>
         <tbody>
+          {sort.sorted.length === 0 && <TableEmptyRow colSpan={6}>No consumables tracked yet.</TableEmptyRow>}
           {sort.sorted.map((c) => (
             <HoverRow key={c.id}>
               <td style={{ ...tdStyle, fontFamily: "var(--font-sans)", color: "var(--text-1)", fontWeight: 500 }}>{c.name}</td>

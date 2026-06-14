@@ -1,12 +1,12 @@
 import React from "react";
 import { Plus, Trash2, Package, KeyRound } from "lucide-react";
 import { Button, Badge, Tabs, Dialog, Input, Select } from "../ds";
-import { PageHeader, TableCard, HoverRow, thStyle, tdStyle, Field, SortableTh, useSort } from "../components/bits.jsx";
+import { PageHeader, TableCard, HoverRow, thStyle, tdStyle, Field, SortableTh, useSort, TableEmptyRow } from "../components/bits.jsx";
 import { formatDate, daysUntil } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
 
 function SoftwareTab() {
-  const { software, devices, deleteSoftware, addSoftware, hasPerm } = useStore();
+  const { software, devices, deleteSoftware, addSoftware, hasPerm, toast } = useStore();
   const canEdit = hasPerm("devices.write");
   const [adding, setAdding] = React.useState(false);
   const [form, setForm] = React.useState({});
@@ -19,7 +19,7 @@ function SoftwareTab() {
   const sort = useSort(software, getters, "name", 1);
 
   const submit = () => {
-    if (!form.name?.trim()) return;
+    if (!form.name?.trim()) { toast("danger", "Name required", "Give the software a name."); return; }
     addSoftware({ name: form.name.trim(), publisher: form.publisher || "", version: form.version || "", category: form.category || "Other" });
     setAdding(false); setForm({});
   };
@@ -41,6 +41,7 @@ function SoftwareTab() {
           {canEdit && <th style={{ ...thStyle, textAlign: "right" }} />}
         </tr></thead>
         <tbody>
+          {sort.sorted.length === 0 && <TableEmptyRow colSpan={canEdit ? 6 : 5}>No software catalogued yet.</TableEmptyRow>}
           {sort.sorted.map((s) => (
             <HoverRow key={s.id}>
               <td style={{ ...tdStyle, fontFamily: "var(--font-sans)", color: "var(--text-1)", fontWeight: 500 }}>{s.name}</td>
@@ -70,7 +71,7 @@ function SoftwareTab() {
           { label: "Add", variant: "primary", onClick: submit },
         ]}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          <Field label="Name" span={2}><Input value={form.name || ""} onChange={set("name")} autoFocus /></Field>
+          <Field label="Name" span={2} required><Input value={form.name || ""} onChange={set("name")} autoFocus /></Field>
           <Field label="Publisher"><Input value={form.publisher || ""} onChange={set("publisher")} /></Field>
           <Field label="Version"><Input value={form.version || ""} onChange={set("version")} /></Field>
           <Field label="Category" span={2}><Input value={form.category || ""} onChange={set("category")} placeholder="Productivity" /></Field>
@@ -81,7 +82,7 @@ function SoftwareTab() {
 }
 
 function LicensesTab() {
-  const { licenses, software, addLicense, deleteLicense, hasPerm } = useStore();
+  const { licenses, software, addLicense, deleteLicense, hasPerm, toast } = useStore();
   const canEdit = hasPerm("devices.write");
   const [adding, setAdding] = React.useState(false);
   const [form, setForm] = React.useState({});
@@ -96,7 +97,10 @@ function LicensesTab() {
   const sort = useSort(licenses, getters, "name", 1);
 
   const submit = () => {
-    if (!form.name?.trim() || !form.softwareId) return;
+    if (!form.name?.trim() || !form.softwareId) {
+      toast("danger", "Missing fields", "A license needs a name and a linked software.");
+      return;
+    }
     addLicense({
       name: form.name.trim(), softwareId: form.softwareId, key: form.key || "",
       seats: Number(form.seats) || 1, used: Number(form.used) || 0, expires: form.expires || "",
@@ -121,6 +125,7 @@ function LicensesTab() {
           {canEdit && <th style={{ ...thStyle, textAlign: "right" }} />}
         </tr></thead>
         <tbody>
+          {sort.sorted.length === 0 && <TableEmptyRow colSpan={canEdit ? 6 : 5}>No licenses tracked yet.</TableEmptyRow>}
           {sort.sorted.map((l) => {
             const sw = software.find((s) => s.id === l.softwareId);
             const days = daysUntil(l.expires);
@@ -158,8 +163,8 @@ function LicensesTab() {
           { label: "Add", variant: "primary", onClick: submit },
         ]}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          <Field label="Name" span={2}><Input value={form.name || ""} onChange={set("name")} autoFocus /></Field>
-          <Field label="Software" span={2}>
+          <Field label="Name" span={2} required><Input value={form.name || ""} onChange={set("name")} autoFocus /></Field>
+          <Field label="Software" span={2} required>
             <Select value={form.softwareId || ""} onChange={set("softwareId")} style={{ width: "100%" }}
               options={[{ value: "", label: "— choose —" }, ...software.map((s) => ({ value: s.id, label: s.name }))]} />
           </Field>

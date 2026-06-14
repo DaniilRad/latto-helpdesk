@@ -16,13 +16,15 @@ function ProblemStatusBadge({ status }) {
 }
 
 export function Problems() {
-  const { problems, tickets, users, persona, addProblem } = useStore();
+  const { problems, tickets, users, persona, addProblem, toast } = useStore();
   const nav = useNavigate();
   const [q, setQ] = React.useState("");
   const [status, setStatus] = React.useState("open");
   const [creating, setCreating] = React.useState(false);
   const [form, setForm] = React.useState({});
+  const [attempted, setAttempted] = React.useState(false);
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const titleMissing = !form.title?.trim();
 
   const linkCount = (pid) => tickets.filter((t) => t.problemId === pid).length;
   const userById = (id) => users.find((u) => u.id === id);
@@ -50,13 +52,17 @@ export function Problems() {
   const knownErrors = problems.filter((p) => p.status === "known-error");
 
   const submit = () => {
-    if (!form.title?.trim()) return;
+    if (titleMissing) {
+      setAttempted(true);
+      toast("danger", "Title required", "Give the problem a short title.");
+      return;
+    }
     const id = addProblem({
       title: form.title.trim(), description: form.description || "",
       impact: form.impact || "medium", urgency: form.urgency || "medium",
       assigneeId: persona.id,
     });
-    setCreating(false); setForm({});
+    setCreating(false); setForm({}); setAttempted(false);
     nav(`/problems/${id}`);
   };
 
@@ -77,9 +83,9 @@ export function Problems() {
       </div>
 
       <div style={{ display: "flex", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
-        <Input placeholder="Search problems…" icon={<Search size={16} />} value={q}
+        <Input placeholder="Search problems…" aria-label="Search problems" icon={<Search size={16} />} value={q}
           onChange={(e) => setQ(e.target.value)} wrapStyle={{ width: 260 }} />
-        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 170 }}
+        <Select value={status} onChange={(e) => setStatus(e.target.value)} style={{ width: 170 }} aria-label="Filter by status"
           options={[{ value: "open", label: "Open (active)" }, { value: "all", label: "All statuses" },
             ...Object.entries(PROBLEM_STATUS).map(([v, s]) => ({ value: v, label: s.label }))]} />
         <span style={{ alignSelf: "center", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-3)" }}>
@@ -137,8 +143,9 @@ export function Problems() {
           { label: "Create", variant: "primary", onClick: submit },
         ]}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          <Field label="Title" span={2}>
-            <Input value={form.title || ""} onChange={set("title")} autoFocus
+          <Field label="Title" span={2} required
+            error={attempted && titleMissing ? "Title is required" : null}>
+            <Input value={form.title || ""} onChange={set("title")} autoFocus invalid={attempted && titleMissing}
               placeholder="e.g. VPN gateway drops sessions under load" />
           </Field>
           <Field label="Description" span={2}>

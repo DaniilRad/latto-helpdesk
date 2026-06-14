@@ -2,19 +2,24 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Plus, Trash2, Globe, Database, Building2, Radar, Check, X, Network, ChevronRight, ChevronDown, Container } from "lucide-react";
 import { Button, Badge, Tabs, Dialog, Input, Select, Tag, Card } from "../ds";
-import { PageHeader, TableCard, HoverRow, thStyle, tdStyle, Field, EmptyState, rowActivation } from "../components/bits.jsx";
+import { PageHeader, TableCard, HoverRow, thStyle, tdStyle, Field, EmptyState, rowActivation, TableEmptyRow } from "../components/bits.jsx";
 import { DEVICE_TYPES, formatDate, daysUntil, relTime } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
 
 function AddDialog({ open, onClose, title, fields, onSubmit }) {
+  const { toast } = useStore();
   const [form, setForm] = React.useState({});
   React.useEffect(() => { if (open) setForm({}); }, [open]);
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const tryAdd = () => {
+    if (onSubmit(form)) onClose();
+    else toast("danger", "Name required", "Fill in the name before adding.");
+  };
   return (
     <Dialog open={open} onClose={onClose} title={title}
       actions={[
         { label: "Cancel", variant: "ghost", onClick: onClose },
-        { label: "Add", variant: "primary", onClick: () => { if (onSubmit(form)) onClose(); } },
+        { label: "Add", variant: "primary", onClick: tryAdd },
       ]}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         {fields.map((f) => (
@@ -44,6 +49,7 @@ function DomainsTab() {
           <th style={thStyle}>Expires</th><th style={thStyle}>Notes</th><th style={thStyle} />
         </tr></thead>
         <tbody>
+          {domains.length === 0 && <TableEmptyRow colSpan={6}>No domains tracked yet.</TableEmptyRow>}
           {domains.map((d) => {
             const days = daysUntil(d.expires);
             return (
@@ -92,6 +98,7 @@ function DatabasesTab() {
           <th style={thStyle}>Size</th><th style={thStyle}>Notes</th><th style={thStyle} />
         </tr></thead>
         <tbody>
+          {databases.length === 0 && <TableEmptyRow colSpan={6}>No databases tracked yet.</TableEmptyRow>}
           {databases.map((db) => {
             const host = devices.find((d) => d.id === db.assetId);
             return (

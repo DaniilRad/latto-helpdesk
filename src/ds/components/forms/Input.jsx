@@ -33,6 +33,7 @@ export function Input({
     >
       {icon && <span style={{ display: "inline-flex", color: "var(--text-3)", flex: "0 0 auto" }}>{icon}</span>}
       <input
+        aria-invalid={invalid || undefined}
         onFocus={(e) => { setFocus(true); rest.onFocus && rest.onFocus(e); }}
         onBlur={(e) => { setFocus(false); rest.onBlur && rest.onBlur(e); }}
         {...rest}
