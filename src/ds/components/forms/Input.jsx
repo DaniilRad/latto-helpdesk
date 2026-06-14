@@ -19,7 +19,7 @@ export function Input({
     <div
       style={{
         display: "flex",
-        alignItems: "center",
+        alignItems: "stretch",
         gap: "var(--space-2)",
         height: heights[size],
         padding: "0 var(--space-3)",
