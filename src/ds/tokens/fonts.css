@@ -1,0 +1,8 @@
+/* Lätto webfonts
+   — Geist Mono (Google Fonts) for terminal / code / numeric UI
+   — Satoshi (Fontshare) geometric sans for app & marketing body UI
+   Both are free, CDN-hosted. For production you may want to self-host the
+   woff2 files; see readme.md > VISUAL FOUNDATIONS. */
+
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap");
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap");

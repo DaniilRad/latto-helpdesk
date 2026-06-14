@@ -1,0 +1,139 @@
+/* ============================================================
+   Lätto — Color System
+   Dark is the default (:root). Two additional themes:
+     [data-theme="light"]  — warm paper
+     [data-theme="dusk"]   — warm dim espresso, the "in-between"
+   Base ramps are theme-agnostic raw values; semantic aliases
+   below them are what UI should consume.
+   ============================================================ */
+
+:root {
+  /* ---- Brand accent (amber/orange) — shared across themes ---- */
+  --amber-300: #fdba74;
+  --amber-400: #fb923c;
+  --amber-500: #f97316;
+  --amber-600: #ea580c;
+
+  /* ---- Semantic status hues ---- */
+  --green:  #4ade80;
+  --yellow: #fbbf24;
+  --red:    #f87171;
+  --blue:   #38bdf8;
+  --violet: #a78bfa;
+
+  /* =========================================================
+     DARK THEME (default) — cold near-black terminal
+     ========================================================= */
+  --bg:            #0c0d0f;   /* app backdrop */
+  --surface-1:     #141518;   /* raised card */
+  --surface-2:     #1c1e22;   /* nested / input */
+  --surface-3:     #25282d;   /* hover / active well */
+  --overlay:       rgba(8, 9, 11, 0.72);
+
+  --border:        rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-faint:  rgba(255, 255, 255, 0.06);
+
+  --text-1: #f4f4f5;   /* primary */
+  --text-2: #a6a8ad;   /* secondary */
+  --text-3: #6e7176;   /* muted / placeholder */
+  --text-inverse: #0c0d0f;
+
+  /* accent application */
+  --accent:          var(--amber-400);
+  --accent-hover:    var(--amber-300);
+  --accent-press:    var(--amber-500);
+  --accent-contrast: #1a1206;            /* text on a solid accent fill */
+  --accent-soft:     rgba(251, 146, 60, 0.14);  /* tinted surface */
+  --accent-ring:     rgba(251, 146, 60, 0.45);   /* focus ring */
+  --accent-text:     var(--amber-400);   /* accent-colored text on bg */
+
+  /* semantic surfaces for status */
+  --success: var(--green);
+  --warning: var(--yellow);
+  --danger:  var(--red);
+  --info:    var(--blue);
+  --success-soft: rgba(74, 222, 128, 0.14);
+  --warning-soft: rgba(251, 191, 36, 0.14);
+  --danger-soft:  rgba(248, 113, 113, 0.14);
+  --info-soft:    rgba(56, 189, 248, 0.14);
+
+  --selection-bg: rgba(251, 146, 60, 0.28);
+}
+
+/* =========================================================
+   LIGHT THEME — warm paper
+   ========================================================= */
+[data-theme="light"] {
+  --bg:            #f7f5f1;
+  --surface-1:     #ffffff;
+  --surface-2:     #f0ede7;
+  --surface-3:     #e7e3da;
+  --overlay:       rgba(28, 24, 18, 0.40);
+
+  --border:        rgba(24, 22, 18, 0.12);
+  --border-strong: rgba(24, 22, 18, 0.22);
+  --border-faint:  rgba(24, 22, 18, 0.06);
+
+  --text-1: #1a1814;
+  --text-2: #56524a;
+  --text-3: #8c887e;
+  --text-inverse: #ffffff;
+
+  --accent:          var(--amber-500);
+  --accent-hover:    var(--amber-400);
+  --accent-press:    var(--amber-600);
+  --accent-contrast: #fff7ed;
+  --accent-soft:     rgba(249, 115, 22, 0.12);
+  --accent-ring:     rgba(249, 115, 22, 0.40);
+  --accent-text:     var(--amber-600);
+
+  --success-soft: rgba(22, 163, 74, 0.12);
+  --warning-soft: rgba(217, 119, 6, 0.14);
+  --danger-soft:  rgba(220, 38, 38, 0.12);
+  --info-soft:    rgba(2, 132, 199, 0.12);
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger:  #dc2626;
+  --info:    #0284c7;
+
+  --selection-bg: rgba(249, 115, 22, 0.22);
+}
+
+/* =========================================================
+   DUSK THEME — warm dim espresso, the "in-between"
+   Reads like dark mode, but amber-tinted and softer.
+   ========================================================= */
+[data-theme="dusk"] {
+  --bg:            #1e1a16;
+  --surface-1:     #28231d;
+  --surface-2:     #322c24;
+  --surface-3:     #3d352b;
+  --overlay:       rgba(16, 13, 10, 0.70);
+
+  --border:        rgba(245, 230, 205, 0.12);
+  --border-strong: rgba(245, 230, 205, 0.22);
+  --border-faint:  rgba(245, 230, 205, 0.07);
+
+  --text-1: #ece0ce;
+  --text-2: #b6a892;
+  --text-3: #837764;
+  --text-inverse: #1e1a16;
+
+  --accent:          #fba94c;
+  --accent-hover:    #fdc278;
+  --accent-press:    #f6952e;
+  --accent-contrast: #20140a;
+  --accent-soft:     rgba(251, 169, 76, 0.16);
+  --accent-ring:     rgba(251, 169, 76, 0.45);
+  --accent-text:     #fdc278;
+
+  --success-soft: rgba(74, 222, 128, 0.14);
+  --warning-soft: rgba(251, 191, 36, 0.14);
+  --danger-soft:  rgba(248, 113, 113, 0.14);
+  --info-soft:    rgba(56, 189, 248, 0.14);
+
+  --selection-bg: rgba(251, 169, 76, 0.28);
+}
+
+::selection { background: var(--selection-bg); }
