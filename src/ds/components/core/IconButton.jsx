@@ -19,6 +19,7 @@ export function IconButton({
     surface: { background: "var(--surface-2)", color: "var(--text-1)", border: "1px solid var(--border)" },
     accent: { background: "var(--accent)", color: "var(--accent-contrast)", border: "1px solid transparent" },
   };
+  const disabledPalette = { background: "var(--surface-2)", color: "var(--text-3)", border: "1px solid var(--border-faint)" };
   const base = {
     display: "inline-flex",
     alignItems: "center",
@@ -27,9 +28,9 @@ export function IconButton({
     height: dims[size],
     borderRadius: "var(--radius-md)",
     cursor: disabled ? "not-allowed" : "pointer",
-    opacity: disabled ? 0.45 : 1,
+    opacity: disabled ? 0.7 : 1,
     transition: "background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease)",
-    ...palettes[variant],
+    ...(disabled ? disabledPalette : palettes[variant]),
     ...style,
   };
   const onEnter = (e) => {
@@ -39,8 +40,9 @@ export function IconButton({
     else if (variant === "accent") e.currentTarget.style.background = "var(--accent-hover)";
   };
   const onLeave = (e) => {
-    e.currentTarget.style.background = palettes[variant].background;
-    e.currentTarget.style.color = palettes[variant].color;
+    const p = disabled ? disabledPalette : palettes[variant];
+    e.currentTarget.style.background = p.background;
+    e.currentTarget.style.color = p.color;
     e.currentTarget.style.transform = "none";
   };
   return (

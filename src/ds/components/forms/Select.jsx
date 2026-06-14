@@ -6,10 +6,13 @@ import React from "react";
  */
 export function Select({ options, size = "md", invalid = false, style = {}, children, ...rest }) {
   const heights = { sm: "var(--control-h-sm)", md: "var(--control-h-md)", lg: "var(--control-h-lg)" };
+  const [focus, setFocus] = React.useState(false);
   return (
     <div style={{ position: "relative", display: "inline-flex", width: style.width || "auto" }}>
       <select
         {...rest}
+        onFocus={(e) => { setFocus(true); rest.onFocus && rest.onFocus(e); }}
+        onBlur={(e) => { setFocus(false); rest.onBlur && rest.onBlur(e); }}
         style={{
           appearance: "none",
           WebkitAppearance: "none",
@@ -18,12 +21,14 @@ export function Select({ options, size = "md", invalid = false, style = {}, chil
           padding: "0 var(--space-7) 0 var(--space-3)",
           background: "var(--surface-2)",
           color: "var(--text-1)",
-          border: `1px solid ${invalid ? "var(--danger)" : "var(--border)"}`,
+          border: `1px solid ${invalid ? "var(--danger)" : focus ? "var(--accent)" : "var(--border)"}`,
           borderRadius: "var(--radius-md)",
+          boxShadow: focus ? "var(--ring)" : "none",
           fontFamily: "var(--font-sans)",
           fontSize: "var(--text-sm)",
           cursor: "pointer",
           outline: "none",
+          transition: "border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease)",
           ...style,
         }}
       >

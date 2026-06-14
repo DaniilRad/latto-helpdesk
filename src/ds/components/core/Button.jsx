@@ -44,6 +44,14 @@ export function Button({
     },
   };
 
+  // A single, distinct "off" treatment for every variant — desaturated surface,
+  // muted text, faint border — so disabled never reads as a live button.
+  const disabledPalette = {
+    background: "var(--surface-2)",
+    color: "var(--text-3)",
+    border: "1px solid var(--border-faint)",
+  };
+
   const base = {
     display: block ? "flex" : "inline-flex",
     width: block ? "100%" : "auto",
@@ -58,11 +66,11 @@ export function Button({
     lineHeight: 1,
     borderRadius: "var(--radius-md)",
     cursor: disabled ? "not-allowed" : "pointer",
-    opacity: disabled ? 0.45 : 1,
+    opacity: disabled ? 0.7 : 1,
     transition: "background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease)",
     userSelect: "none",
     whiteSpace: "nowrap",
-    ...palettes[variant],
+    ...(disabled ? disabledPalette : palettes[variant]),
     ...style,
   };
 
@@ -76,7 +84,7 @@ export function Button({
     else if (variant === "danger") e.currentTarget.style.background = "color-mix(in srgb, var(--danger) 22%, transparent)";
   };
   const onLeave = (e) => {
-    e.currentTarget.style.background = palettes[variant].background;
+    e.currentTarget.style.background = disabled ? disabledPalette.background : palettes[variant].background;
     e.currentTarget.style.transform = "none";
   };
 

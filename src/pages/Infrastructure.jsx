@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Plus, Trash2, Globe, Database, Building2, Radar, Check, X, Network, ChevronRight, ChevronDown, Container } from "lucide-react";
 import { Button, Badge, Tabs, Dialog, Input, Select, Tag, Card } from "../ds";
-import { PageHeader, TableCard, HoverRow, thStyle, tdStyle, Field, EmptyState } from "../components/bits.jsx";
+import { PageHeader, TableCard, HoverRow, thStyle, tdStyle, Field, EmptyState, rowActivation } from "../components/bits.jsx";
 import { DEVICE_TYPES, formatDate, daysUntil, relTime } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
 
@@ -234,14 +234,16 @@ function UnmanagedTab() {
   );
 }
 
-/** Collapsible tree row. */
-function TreeRow({ depth, icon, label, sub, badge, open, onToggle, accent }) {
+/** Collapsible tree row. Toggle rows are buttons; leaf rows are hover-lit
+ *  and rely on a wrapping <Link> for activation and focus. */
+function TreeRow({ depth, icon, label, sub, badge, open, onToggle, accent, interactive }) {
+  const clickable = Boolean(onToggle) || interactive;
   return (
-    <div onClick={onToggle}
+    <div {...(onToggle ? { ...rowActivation(onToggle), "aria-expanded": open, "aria-label": label } : {})}
       style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px",
-        paddingLeft: 10 + depth * 22, cursor: onToggle ? "pointer" : "default",
+        paddingLeft: 10 + depth * 22, cursor: clickable ? "pointer" : "default",
         borderRadius: "var(--radius-sm)" }}
-      onMouseEnter={(e) => { if (onToggle) e.currentTarget.style.background = "var(--surface-2)"; }}
+      onMouseEnter={(e) => { if (clickable) e.currentTarget.style.background = "var(--surface-2)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
       {onToggle ? (open ? <ChevronDown size={14} style={{ color: "var(--text-3)" }} /> : <ChevronRight size={14} style={{ color: "var(--text-3)" }} />)
         : <span style={{ width: 14 }} />}
@@ -298,7 +300,7 @@ function TreeTab() {
                       const T = (DEVICE_TYPES[dev.type] || DEVICE_TYPES.peripheral);
                       return (
                         <Link key={dev.id} to={`/devices/${dev.id}`} style={{ textDecoration: "none", display: "block" }}>
-                          <TreeRow depth={2}
+                          <TreeRow depth={2} interactive
                             icon={<T.icon size={14} style={{ color: T.color }} />}
                             label={dev.name} sub={`${dev.brand} ${dev.model}`} />
                         </Link>

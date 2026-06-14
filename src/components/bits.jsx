@@ -86,8 +86,29 @@ export function SortableTh({ k, sort, children, align = "left", style = {} }) {
 
 export const tdStyle = {
   padding: "11px 14px", fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--text-2)",
-  borderBottom: "1px solid var(--border-faint)", whiteSpace: "nowrap",
+  borderBottom: "1px solid var(--border-faint)", verticalAlign: "middle",
 };
+
+/** Keep short, atomic cells (IDs, dates, numbers, badges) on a single line. */
+export const tdNoWrap = { ...tdStyle, whiteSpace: "nowrap" };
+
+/**
+ * Props that make a non-semantic clickable element keyboard-operable:
+ * focusable, activates on Enter/Space, and exposed as a button to a11y tools.
+ * The global :focus-visible ring (base.css) supplies the focus affordance.
+ * Activation is ignored when the event originates from a nested control.
+ */
+export function rowActivation(onActivate) {
+  return {
+    role: "button",
+    tabIndex: 0,
+    onClick: onActivate,
+    onKeyDown: (e) => {
+      if (e.target !== e.currentTarget) return;
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onActivate(e); }
+    },
+  };
+}
 
 /** Table wrapper card with hoverable rows. */
 export function TableCard({ children }) {

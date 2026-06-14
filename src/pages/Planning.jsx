@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, Card, Select, Badge } from "../ds";
-import { PageHeader, Eyebrow } from "../components/bits.jsx";
+import { PageHeader, Eyebrow, rowActivation } from "../components/bits.jsx";
 import { OPEN_STATUSES, PRIORITY, slaState } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
 
@@ -85,16 +85,18 @@ export function Planning() {
                   </div>
                 )}
                 {dayTickets.slice(0, 3).map((t) => (
-                  <div key={t.id} onClick={() => nav(`/tickets/${t.id}`)} title={`${t.number} · ${t.title}`}
-                    style={{ display: "flex", alignItems: "center", gap: 5, padding: "3px 6px", marginBottom: 3,
-                      background: "var(--surface-2)", borderLeft: `2px solid ${P_COLOR[t.priority]}`,
-                      borderRadius: 5, cursor: "pointer", overflow: "hidden" }}
+                  <div key={t.id} {...rowActivation(() => nav(`/tickets/${t.id}`))}
+                    title={`${t.number} · ${t.title}`} aria-label={`Ticket ${t.number}: ${t.title}`}
+                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "var(--space-1) var(--space-2)",
+                      marginBottom: "var(--space-1)", background: "var(--surface-2)",
+                      borderLeft: `2px solid ${P_COLOR[t.priority]}`,
+                      borderRadius: "var(--radius-sm)", cursor: "pointer", overflow: "hidden" }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-3)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}>
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-3)", flex: "0 0 auto" }}>
                       {PRIORITY[t.priority].short}
                     </span>
-                    <span style={{ fontSize: 11, color: "var(--text-1)", overflow: "hidden",
+                    <span style={{ fontSize: 11, color: "var(--text-1)", flex: 1, minWidth: 0, overflow: "hidden",
                       textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.title}</span>
                   </div>
                 ))}
@@ -104,11 +106,15 @@ export function Planning() {
                   </span>
                 )}
                 {dayRes.map((r) => (
-                  <div key={r.id} onClick={() => nav("/reservations")} title={r.note}
-                    style={{ display: "flex", alignItems: "center", gap: 5, padding: "2px 6px", marginTop: 2,
-                      borderRadius: 5, cursor: "pointer", border: "1px dashed var(--border-strong)" }}>
+                  <div key={r.id} {...rowActivation(() => nav("/reservations"))} title={r.note}
+                    aria-label={`Reservation: ${devices.find((x) => x.id === r.assetId)?.name || "asset"}`}
+                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "var(--space-1) var(--space-2)",
+                      marginTop: "var(--space-1)", borderRadius: "var(--radius-sm)", cursor: "pointer",
+                      border: "1px dashed var(--border-strong)" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
                     <span style={{ fontSize: 10, fontFamily: "var(--font-mono)", color: "var(--text-2)",
-                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       ⌂ {devices.find((x) => x.id === r.assetId)?.name || "?"}
                     </span>
                   </div>

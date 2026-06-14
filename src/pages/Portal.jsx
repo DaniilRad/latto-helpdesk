@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Search, LifeBuoy, BookOpen, ArrowRight } from "lucide-react";
 import { Card, Button, Input, Badge } from "../ds";
-import { Eyebrow } from "../components/bits.jsx";
+import { Eyebrow, rowActivation } from "../components/bits.jsx";
 import { PriorityBadge, StatusBadge } from "../components/ticketBits.jsx";
 import { TicketDialog } from "../components/TicketDialog.jsx";
 import { OPEN_STATUSES, relTime } from "../lib/meta.js";
@@ -54,7 +54,8 @@ export function Portal() {
                 Nothing yet. When you open a ticket it shows up here.
               </p>
             ) : mine.slice(0, 5).map((t, i) => (
-              <div key={t.id} onClick={() => nav(`/tickets/${t.id}`)}
+              <div key={t.id} {...rowActivation(() => nav(`/tickets/${t.id}`))}
+                aria-label={`Ticket ${t.number}: ${t.title}`}
                 style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 18px", cursor: "pointer",
                   borderTop: i === 0 ? "none" : "1px solid var(--border-faint)" }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}
@@ -83,7 +84,8 @@ export function Portal() {
                 No matches. Open a ticket and we'll figure it out together.
               </p>
             ) : hits.map((a, i) => (
-              <div key={a.id} onClick={() => nav(`/kb/${a.id}`)}
+              <div key={a.id} {...rowActivation(() => nav(`/kb/${a.id}`))}
+                aria-label={`Article: ${a.title}`}
                 style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 18px", cursor: "pointer",
                   borderTop: i === 0 ? "none" : "1px solid var(--border-faint)" }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}

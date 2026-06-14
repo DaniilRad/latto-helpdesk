@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Trash2, X, Plus, Save } from "lucide-react";
 import { Card, Badge, Button, Select, Avatar, Dialog } from "../ds";
-import { PageHeader, Eyebrow } from "../components/bits.jsx";
+import { PageHeader, Eyebrow, rowActivation } from "../components/bits.jsx";
 import { PriorityBadge, StatusBadge, Textarea } from "../components/ticketBits.jsx";
 import {
   PROBLEM_STATUS, LEVELS, OPEN_STATUSES, computePriority, relTime,
@@ -124,9 +124,10 @@ export function ProblemDetail() {
               linked.map((t) => {
                 const req = userById(t.requesterId);
                 return (
-                  <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px",
+                  <div key={t.id} {...rowActivation(() => nav(`/tickets/${t.id}`))}
+                    aria-label={`Ticket ${t.number}: ${t.title}`}
+                    style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px",
                     borderTop: "1px solid var(--border-faint)", cursor: "pointer" }}
-                    onClick={() => nav(`/tickets/${t.id}`)}
                     onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}>
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--accent-text)", flex: "0 0 auto" }}>{t.number}</span>

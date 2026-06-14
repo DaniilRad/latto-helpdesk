@@ -65,7 +65,7 @@ function Sidebar() {
     <aside style={{ width: 248, flex: "0 0 auto", borderRight: "1px solid var(--border)",
       background: "var(--surface-1)", display: "flex", flexDirection: "column", height: "100%" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 16px 12px" }}>
-        <img src={markUrl} width="28" height="28" style={{ borderRadius: 7 }} alt="" />
+        <img src={markUrl} width="28" height="28" style={{ borderRadius: "var(--radius-sm)" }} alt="" />
         <span style={{ fontWeight: 900, fontSize: 18, letterSpacing: "-0.02em", color: "var(--text-1)" }}>
           Helpdesk hub
         </span>

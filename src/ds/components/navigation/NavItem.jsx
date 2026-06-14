@@ -17,6 +17,7 @@ export function NavItem({
   const [hover, setHover] = React.useState(false);
   return (
     <As
+      type={as === "button" ? "button" : undefined}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
