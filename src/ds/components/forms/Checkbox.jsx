@@ -1,18 +1,23 @@
-import React from "react";
-
 /**
  * Lätto Checkbox — square check with soft corners. Amber when checked.
  * Controlled via `checked`. Optional label.
  */
 export function Checkbox({ checked = false, onChange, disabled = false, label, style = {}, ...rest }) {
-  const toggle = () => { if (!disabled && onChange) onChange(!checked); };
+  const toggle = () => {
+    if (!disabled && onChange) onChange(!checked);
+  };
   const box = (
     <span
       role="checkbox"
       aria-checked={checked}
       tabIndex={disabled ? -1 : 0}
       onClick={toggle}
-      onKeyDown={(e) => { if (e.key === " ") { e.preventDefault(); toggle(); } }}
+      onKeyDown={(e) => {
+        if (e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      }}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -31,8 +36,16 @@ export function Checkbox({ checked = false, onChange, disabled = false, label, s
       {...rest}
     >
       {checked && (
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-          stroke="var(--accent-contrast)" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--accent-contrast)"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <polyline points="20 6 9 17 4 12" />
         </svg>
       )}
@@ -40,9 +53,18 @@ export function Checkbox({ checked = false, onChange, disabled = false, label, s
   );
   if (!label) return box;
   return (
-    <label style={{ display: "inline-flex", alignItems: "center", gap: "var(--space-3)", cursor: disabled ? "not-allowed" : "pointer" }}>
+    <label
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "var(--space-3)",
+        cursor: disabled ? "not-allowed" : "pointer",
+      }}
+    >
       {box}
-      <span style={{ fontFamily: "var(--font-sans)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>{label}</span>
+      <span style={{ fontFamily: "var(--font-sans)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>
+        {label}
+      </span>
     </label>
   );
 }

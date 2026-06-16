@@ -1,28 +1,66 @@
+import { ArrowLeft, Boxes, Lock, MessageSquare, Send } from "lucide-react";
 import React from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Lock, MessageSquare, Send, Boxes } from "lucide-react";
-import { Card, Badge, Button, Select, Avatar, Switch } from "../ds";
-import { PageHeader, Eyebrow } from "../components/bits.jsx";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Eyebrow, PageHeader } from "../components/bits.jsx";
 import { PriorityBadge, StatusBadge, Textarea } from "../components/ticketBits.jsx";
+import { Avatar, Badge, Button, Card, Select, Switch } from "../ds";
 import {
-  TICKET_STATUS, TICKET_CATEGORIES, LEVELS, DEVICE_TYPES, PROBLEM_STATUS,
-  slaState, SLA_TONES, dueIn, formatDateTime, relTime,
+  DEVICE_TYPES,
+  dueIn,
+  formatDateTime,
+  LEVELS,
+  PROBLEM_STATUS,
+  relTime,
+  SLA_TONES,
+  slaState,
+  TICKET_CATEGORIES,
+  TICKET_STATUS,
 } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
 
 function SlaRow({ label, phase, satisfiedAt }) {
   const toneColor = { success: "var(--success)", warning: "var(--warning)", danger: "var(--danger)" };
   const tone = SLA_TONES[phase.state];
-  const text = phase.state === "met" ? `met · ${formatDateTime(satisfiedAt)}`
-    : phase.state === "late" ? `late · ${formatDateTime(satisfiedAt)}`
-    : phase.state === "breached" ? `${dueIn(phase.due)} · breached`
-    : `due ${dueIn(phase.due)}`;
+  const text =
+    phase.state === "met"
+      ? `met · ${formatDateTime(satisfiedAt)}`
+      : phase.state === "late"
+        ? `late · ${formatDateTime(satisfiedAt)}`
+        : phase.state === "breached"
+          ? `${dueIn(phase.due)} · breached`
+          : `due ${dueIn(phase.due)}`;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0",
-      borderBottom: "1px solid var(--border-faint)" }}>
-      <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em",
-        textTransform: "uppercase", color: "var(--text-3)", width: 130, flex: "0 0 auto" }}>{label}</span>
-      <span style={{ width: 8, height: 8, borderRadius: "50%", background: toneColor[tone] || "var(--text-3)", flex: "0 0 auto" }} />
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "8px 0",
+        borderBottom: "1px solid var(--border-faint)",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 11,
+          letterSpacing: ".1em",
+          textTransform: "uppercase",
+          color: "var(--text-3)",
+          width: 130,
+          flex: "0 0 auto",
+        }}
+      >
+        {label}
+      </span>
+      <span
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: "50%",
+          background: toneColor[tone] || "var(--text-3)",
+          flex: "0 0 auto",
+        }}
+      />
       <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>{text}</span>
     </div>
   );
@@ -34,7 +72,8 @@ function TimelineEvent({ ev, users }) {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0 6px 46px" }}>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)" }}>
-          {author?.sam || "system"} · {TICKET_STATUS[ev.from]?.label || ev.from} → {TICKET_STATUS[ev.to]?.label || ev.to} · {relTime(ev.ts)}
+          {author?.sam || "system"} · {TICKET_STATUS[ev.from]?.label || ev.from} →{" "}
+          {TICKET_STATUS[ev.to]?.label || ev.to} · {relTime(ev.ts)}
         </span>
       </div>
     );
@@ -54,16 +93,28 @@ function TimelineEvent({ ev, users }) {
       <Avatar name={author?.displayName || "?"} size={34} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 13, fontWeight: 500, color: "var(--text-1)" }}>{author?.displayName || "Unknown"}</span>
-          {internal && <Badge tone="warning" style={{ height: "1.2rem" }}><Lock size={9} style={{ marginRight: 3 }} />internal</Badge>}
+          <span style={{ fontSize: 13, fontWeight: 500, color: "var(--text-1)" }}>
+            {author?.displayName || "Unknown"}
+          </span>
+          {internal && (
+            <Badge tone="warning" style={{ height: "1.2rem" }}>
+              <Lock size={9} style={{ marginRight: 3 }} />
+              internal
+            </Badge>
+          )}
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)" }}>{relTime(ev.ts)}</span>
         </div>
-        <div style={{
-          padding: "10px 14px", fontSize: 14, lineHeight: 1.55, color: "var(--text-2)",
-          background: internal ? "var(--warning-soft)" : "var(--surface-2)",
-          border: `1px solid ${internal ? "color-mix(in srgb, var(--warning) 25%, transparent)" : "var(--border-faint)"}`,
-          borderRadius: "var(--radius-md)",
-        }}>
+        <div
+          style={{
+            padding: "10px 14px",
+            fontSize: 14,
+            lineHeight: 1.55,
+            color: "var(--text-2)",
+            background: internal ? "var(--warning-soft)" : "var(--surface-2)",
+            border: `1px solid ${internal ? "color-mix(in srgb, var(--warning) 25%, transparent)" : "var(--border-faint)"}`,
+            borderRadius: "var(--radius-md)",
+          }}
+        >
           {ev.text}
         </div>
       </div>
@@ -75,8 +126,18 @@ export function TicketDetail() {
   const { id } = useParams();
   const nav = useNavigate();
   const {
-    tickets, users, devices, problems, groups, persona, hasPerm,
-    setTicketStatus, assignTicket, setTicketGroup, saveTicketMeta, addTicketEvent,
+    tickets,
+    users,
+    devices,
+    problems,
+    groups,
+    persona,
+    hasPerm,
+    setTicketStatus,
+    assignTicket,
+    setTicketGroup,
+    saveTicketMeta,
+    addTicketEvent,
   } = useStore();
 
   const [draft, setDraft] = React.useState("");
@@ -89,8 +150,12 @@ export function TicketDetail() {
   if (!ticket || !canSee) {
     return (
       <>
-        <Button variant="ghost" size="sm" iconLeft={<ArrowLeft size={15} />} onClick={() => nav("/tickets")}>Tickets</Button>
-        <p style={{ color: "var(--text-2)" }}>{ticket ? "You don't have access to this ticket." : "This ticket doesn't exist anymore."}</p>
+        <Button variant="ghost" size="sm" iconLeft={<ArrowLeft size={15} />} onClick={() => nav("/tickets")}>
+          Tickets
+        </Button>
+        <p style={{ color: "var(--text-2)" }}>
+          {ticket ? "You don't have access to this ticket." : "This ticket doesn't exist anymore."}
+        </p>
       </>
     );
   }
@@ -100,7 +165,9 @@ export function TicketDetail() {
   const asset = devices.find((d) => d.id === ticket.assetId);
   const problem = problems.find((p) => p.id === ticket.problemId);
   const sla = slaState(ticket);
-  const technicians = users.filter((u) => u.groups?.some((g) => ["IT-Admins", "IT-Support", "IT-Supervisors"].includes(g)));
+  const technicians = users.filter((u) =>
+    u.groups?.some((g) => ["IT-Admins", "IT-Support", "IT-Supervisors"].includes(g)),
+  );
   const timeline = canWork ? ticket.timeline : ticket.timeline.filter((e) => e.type !== "note");
 
   const send = () => {
@@ -114,17 +181,31 @@ export function TicketDetail() {
 
   return (
     <>
-      <Button variant="ghost" size="sm" iconLeft={<ArrowLeft size={15} />}
-        onClick={() => nav("/tickets")} style={{ marginBottom: 10 }}>Tickets</Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        iconLeft={<ArrowLeft size={15} />}
+        onClick={() => nav("/tickets")}
+        style={{ marginBottom: 10 }}
+      >
+        Tickets
+      </Button>
 
-      <PageHeader eyebrow={`${ticket.number} · ${TICKET_CATEGORIES[ticket.category]?.label.toUpperCase() || ""}`}
+      <PageHeader
+        eyebrow={`${ticket.number} · ${TICKET_CATEGORIES[ticket.category]?.label.toUpperCase() || ""}`}
         title={ticket.title}
-        actions={canWork ? (
-          <Select value={ticket.status} onChange={(e) => setTicketStatus(ticket.id, e.target.value, persona.id)}
-            options={Object.entries(TICKET_STATUS).map(([v, s]) => ({ value: v, label: s.label }))} />
-        ) : canClose ? (
-          <Button onClick={() => setTicketStatus(ticket.id, "closed", persona.id)}>Approve & close</Button>
-        ) : null}>
+        actions={
+          canWork ? (
+            <Select
+              value={ticket.status}
+              onChange={(e) => setTicketStatus(ticket.id, e.target.value, persona.id)}
+              options={Object.entries(TICKET_STATUS).map(([v, s]) => ({ value: v, label: s.label }))}
+            />
+          ) : canClose ? (
+            <Button onClick={() => setTicketStatus(ticket.id, "closed", persona.id)}>Approve & close</Button>
+          ) : null
+        }
+      >
         <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center", flexWrap: "wrap" }}>
           <StatusBadge status={ticket.status} />
           <PriorityBadge priority={ticket.priority} full />
@@ -145,15 +226,21 @@ export function TicketDetail() {
 
           <Card>
             <Eyebrow style={{ marginBottom: 6 }}>
-              <MessageSquare size={11} style={{ verticalAlign: "-1px", marginRight: 6 }} />TIMELINE
+              <MessageSquare size={11} style={{ verticalAlign: "-1px", marginRight: 6 }} />
+              TIMELINE
             </Eyebrow>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              {timeline.map((ev) => <TimelineEvent key={ev.id} ev={ev} users={users} />)}
+              {timeline.map((ev) => (
+                <TimelineEvent key={ev.id} ev={ev} users={users} />
+              ))}
             </div>
             <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--border)" }}>
-              <Textarea value={draft} onChange={(e) => setDraft(e.target.value)}
+              <Textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
                 placeholder={internal ? "Internal note — requester won't see this" : "Reply to the requester…"}
-                style={internal ? { borderColor: "color-mix(in srgb, var(--warning) 45%, transparent)" } : {}} />
+                style={internal ? { borderColor: "color-mix(in srgb, var(--warning) 45%, transparent)" } : {}}
+              />
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 10 }}>
                 {canWork && <Switch size="sm" checked={internal} onChange={setInternal} label="Internal note" />}
                 <span style={{ flex: 1 }} />
@@ -178,15 +265,39 @@ export function TicketDetail() {
           {problem && (
             <Card>
               <Eyebrow style={{ marginBottom: 10 }}>
-                <Boxes size={11} style={{ verticalAlign: "-1px", marginRight: 6 }} />ROOT-CAUSE PROBLEM
+                <Boxes size={11} style={{ verticalAlign: "-1px", marginRight: 6 }} />
+                ROOT-CAUSE PROBLEM
               </Eyebrow>
               <Link to={`/problems/${problem.id}`} style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px",
-                  background: "var(--surface-2)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-faint)" }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--accent-text)" }}>{problem.number}</span>
-                  <span style={{ fontSize: 13, color: "var(--text-1)", flex: 1, overflow: "hidden",
-                    textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{problem.title}</span>
-                  <Badge tone={PROBLEM_STATUS[problem.status]?.tone || "info"}>{PROBLEM_STATUS[problem.status]?.label}</Badge>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "10px 12px",
+                    background: "var(--surface-2)",
+                    borderRadius: "var(--radius-md)",
+                    border: "1px solid var(--border-faint)",
+                  }}
+                >
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--accent-text)" }}>
+                    {problem.number}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      color: "var(--text-1)",
+                      flex: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {problem.title}
+                  </span>
+                  <Badge tone={PROBLEM_STATUS[problem.status]?.tone || "info"}>
+                    {PROBLEM_STATUS[problem.status]?.label}
+                  </Badge>
                 </div>
               </Link>
               {problem.workaround && (
@@ -202,23 +313,49 @@ export function TicketDetail() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
               <Avatar name={requester?.displayName || "?"} size={32} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, color: "var(--text-1)", fontWeight: 500 }}>{requester?.displayName || "—"}</div>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)" }}>requester · {requester?.department || "—"}</div>
+                <div style={{ fontSize: 13, color: "var(--text-1)", fontWeight: 500 }}>
+                  {requester?.displayName || "—"}
+                </div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)" }}>
+                  requester · {requester?.department || "—"}
+                </div>
               </div>
             </div>
             {hasPerm("tickets.assign") ? (
               <>
-                <Select value={ticket.assigneeId || ""} size="sm" style={{ width: "100%" }}
+                <Select
+                  value={ticket.assigneeId || ""}
+                  size="sm"
+                  style={{ width: "100%" }}
                   onChange={(e) => assignTicket(ticket.id, e.target.value || null, persona.id)}
-                  options={[{ value: "", label: "— unassigned —" },
-                    ...technicians.map((u) => ({ value: u.id, label: u.displayName }))]} />
+                  options={[
+                    { value: "", label: "— unassigned —" },
+                    ...technicians.map((u) => ({ value: u.id, label: u.displayName })),
+                  ]}
+                />
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10 }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em",
-                    textTransform: "uppercase", color: "var(--text-3)", width: 80 }}>team</span>
-                  <Select value={ticket.groupId || ""} size="sm" style={{ flex: 1 }}
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 11,
+                      letterSpacing: ".1em",
+                      textTransform: "uppercase",
+                      color: "var(--text-3)",
+                      width: 80,
+                    }}
+                  >
+                    team
+                  </span>
+                  <Select
+                    value={ticket.groupId || ""}
+                    size="sm"
+                    style={{ flex: 1 }}
                     onChange={(e) => setTicketGroup(ticket.id, e.target.value || null, persona.id)}
-                    options={[{ value: "", label: "— no team —" },
-                      ...groups.map((g) => ({ value: g.id, label: g.name }))]} />
+                    options={[
+                      { value: "", label: "— no team —" },
+                      ...groups.map((g) => ({ value: g.id, label: g.name })),
+                    ]}
+                  />
                 </div>
               </>
             ) : (
@@ -238,22 +375,56 @@ export function TicketDetail() {
             <Eyebrow style={{ marginBottom: 12 }}>CLASSIFICATION</Eyebrow>
             {canWork ? (
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {[["category", TICKET_CATEGORIES], ["impact", LEVELS], ["urgency", LEVELS]].map(([k, opts]) => (
+                {[
+                  ["category", TICKET_CATEGORIES],
+                  ["impact", LEVELS],
+                  ["urgency", LEVELS],
+                ].map(([k, opts]) => (
                   <div key={k} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em",
-                      textTransform: "uppercase", color: "var(--text-3)", width: 80 }}>{k}</span>
-                    <Select size="sm" value={ticket[k]} style={{ flex: 1 }}
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11,
+                        letterSpacing: ".1em",
+                        textTransform: "uppercase",
+                        color: "var(--text-3)",
+                        width: 80,
+                      }}
+                    >
+                      {k}
+                    </span>
+                    <Select
+                      size="sm"
+                      value={ticket[k]}
+                      style={{ flex: 1 }}
                       onChange={(e) => saveTicketMeta(ticket.id, { [k]: e.target.value })}
-                      options={Object.entries(opts).map(([v, o]) => ({ value: v, label: o.label }))} />
+                      options={Object.entries(opts).map(([v, o]) => ({ value: v, label: o.label }))}
+                    />
                   </div>
                 ))}
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em",
-                    textTransform: "uppercase", color: "var(--text-3)", width: 80 }}>asset</span>
-                  <Select size="sm" value={ticket.assetId || ""} style={{ flex: 1 }}
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 11,
+                      letterSpacing: ".1em",
+                      textTransform: "uppercase",
+                      color: "var(--text-3)",
+                      width: 80,
+                    }}
+                  >
+                    asset
+                  </span>
+                  <Select
+                    size="sm"
+                    value={ticket.assetId || ""}
+                    style={{ flex: 1 }}
                     onChange={(e) => saveTicketMeta(ticket.id, { assetId: e.target.value || null })}
-                    options={[{ value: "", label: "— none —" },
-                      ...devices.map((d) => ({ value: d.id, label: `${d.name} · ${d.model}` }))]} />
+                    options={[
+                      { value: "", label: "— none —" },
+                      ...devices.map((d) => ({ value: d.id, label: `${d.name} · ${d.model}` })),
+                    ]}
+                  />
                 </div>
               </div>
             ) : (
@@ -263,13 +434,39 @@ export function TicketDetail() {
             )}
             {asset && hasPerm("devices.read") && (
               <Link to={`/devices/${asset.id}`} style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "10px 12px",
-                  background: "var(--surface-2)", borderRadius: "var(--radius-md)", border: "1px solid var(--border-faint)" }}>
-                  {(() => { const T = (DEVICE_TYPES[asset.type] || DEVICE_TYPES.peripheral).icon;
-                    return <T size={16} style={{ color: (DEVICE_TYPES[asset.type] || DEVICE_TYPES.peripheral).color }} />; })()}
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--text-1)" }}>{asset.name}</span>
-                  <span style={{ fontSize: 12, color: "var(--text-3)", flex: 1, overflow: "hidden",
-                    textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{asset.brand} {asset.model}</span>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    marginTop: 12,
+                    padding: "10px 12px",
+                    background: "var(--surface-2)",
+                    borderRadius: "var(--radius-md)",
+                    border: "1px solid var(--border-faint)",
+                  }}
+                >
+                  {(() => {
+                    const T = (DEVICE_TYPES[asset.type] || DEVICE_TYPES.peripheral).icon;
+                    return (
+                      <T size={16} style={{ color: (DEVICE_TYPES[asset.type] || DEVICE_TYPES.peripheral).color }} />
+                    );
+                  })()}
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--text-1)" }}>
+                    {asset.name}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "var(--text-3)",
+                      flex: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {asset.brand} {asset.model}
+                  </span>
                 </div>
               </Link>
             )}

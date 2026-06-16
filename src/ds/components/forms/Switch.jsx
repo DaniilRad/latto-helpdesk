@@ -1,18 +1,23 @@
-import React from "react";
-
 /**
  * Lätto Switch — a pill toggle. Amber when on. Controlled via `checked`.
  */
 export function Switch({ checked = false, onChange, disabled = false, size = "md", label, style = {}, ...rest }) {
   const dims = size === "sm" ? { w: 36, h: 20, k: 14 } : { w: 46, h: 26, k: 20 };
-  const toggle = () => { if (!disabled && onChange) onChange(!checked); };
+  const toggle = () => {
+    if (!disabled && onChange) onChange(!checked);
+  };
   const control = (
     <span
       role="switch"
       aria-checked={checked}
       tabIndex={disabled ? -1 : 0}
       onClick={toggle}
-      onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggle(); } }}
+      onKeyDown={(e) => {
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          toggle();
+        }
+      }}
       style={{
         position: "relative",
         display: "inline-flex",
@@ -47,9 +52,18 @@ export function Switch({ checked = false, onChange, disabled = false, size = "md
   );
   if (!label) return control;
   return (
-    <label style={{ display: "inline-flex", alignItems: "center", gap: "var(--space-3)", cursor: disabled ? "not-allowed" : "pointer" }}>
+    <label
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "var(--space-3)",
+        cursor: disabled ? "not-allowed" : "pointer",
+      }}
+    >
       {control}
-      <span style={{ fontFamily: "var(--font-sans)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>{label}</span>
+      <span style={{ fontFamily: "var(--font-sans)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>
+        {label}
+      </span>
     </label>
   );
 }

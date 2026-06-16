@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * Lätto Terminal — the signature console surface. A titled window with a
  * sharp-cornered body, mono text, optional traffic-light dots, and a
@@ -8,15 +6,7 @@ import React from "react";
  *
  * line shape: { text, prompt?: string|false, tone?: "muted"|"accent"|"success"|"danger" }
  */
-export function Terminal({
-  title = "zsh",
-  lines = null,
-  dots = true,
-  cursor = false,
-  children,
-  style = {},
-  ...rest
-}) {
+export function Terminal({ title = "zsh", lines = null, dots = true, cursor = false, children, style = {}, ...rest }) {
   const toneColor = {
     muted: "var(--text-3)",
     accent: "var(--accent-text)",
@@ -53,7 +43,9 @@ export function Terminal({
             <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--success)", opacity: 0.85 }} />
           </span>
         )}
-        <span style={{ fontSize: "var(--text-xs)", letterSpacing: "var(--tracking-wide)", color: "var(--text-3)" }}>{title}</span>
+        <span style={{ fontSize: "var(--text-xs)", letterSpacing: "var(--tracking-wide)", color: "var(--text-3)" }}>
+          {title}
+        </span>
       </div>
       <div
         style={{

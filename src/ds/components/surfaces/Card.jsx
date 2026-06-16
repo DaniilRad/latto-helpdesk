@@ -27,14 +27,25 @@ export function Card({
         borderRadius: "var(--radius-lg)",
         padding,
         cursor: interactive ? "pointer" : "default",
-        transition: "background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease)",
+        transition:
+          "background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease)",
         transform: hover ? "translateY(-1px)" : "none",
         ...style,
       }}
       {...rest}
     >
       {highlight && (
-        <span style={{ position: "absolute", left: "var(--space-5)", right: "var(--space-5)", top: 0, height: 2, background: "var(--accent)", borderRadius: "var(--radius-full)" }} />
+        <span
+          style={{
+            position: "absolute",
+            left: "var(--space-5)",
+            right: "var(--space-5)",
+            top: 0,
+            height: 2,
+            background: "var(--accent)",
+            borderRadius: "var(--radius-full)",
+          }}
+        />
       )}
       {children}
     </As>

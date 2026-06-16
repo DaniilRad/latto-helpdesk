@@ -6,21 +6,21 @@
 
 :root {
   /* corner radii */
-  --radius-xs:   4px;
-  --radius-sm:   6px;
-  --radius-md:   10px;
-  --radius-lg:   16px;
-  --radius-xl:   22px;   /* matches logo tile curvature */
-  --radius-2xl:  30px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px; /* matches logo tile curvature */
+  --radius-2xl: 30px;
   --radius-full: 999px;
 
   /* border widths */
   --border-w: 1px;
 
   /* shadows — soft, slightly warm, low opacity (dark-first) */
-  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.30);
-  --shadow-md:  0 4px 14px rgba(0, 0, 0, 0.35);
-  --shadow-lg:  0 12px 34px rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 34px rgba(0, 0, 0, 0.45);
   --shadow-pop: 0 18px 50px rgba(0, 0, 0, 0.55);
 
   /* accent glow — terminal flavor, used sparingly */
@@ -30,9 +30,9 @@
   --ring: 0 0 0 3px var(--accent-ring);
 
   /* motion — quick, no bounce; friendly ease */
-  --ease:       cubic-bezier(0.32, 0.72, 0, 1);   /* @kind other */
-  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);     /* @kind other */
-  --dur-fast:   120ms;                             /* @kind other */
-  --dur-base:   200ms;                             /* @kind other */
-  --dur-slow:   320ms;                             /* @kind other */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1); /* @kind other */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --dur-fast: 120ms; /* @kind other */
+  --dur-base: 200ms; /* @kind other */
+  --dur-slow: 320ms; /* @kind other */
 }

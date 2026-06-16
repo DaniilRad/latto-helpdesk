@@ -6,15 +6,28 @@ function inline(text, keyBase) {
   return parts.map((p, i) => {
     if (p.startsWith("`") && p.endsWith("`")) {
       return (
-        <code key={`${keyBase}-${i}`} style={{ fontFamily: "var(--font-mono)", fontSize: "0.92em",
-          background: "var(--surface-2)", border: "1px solid var(--border-faint)",
-          borderRadius: 4, padding: "1px 5px", color: "var(--accent-text)" }}>
+        <code
+          key={`${keyBase}-${i}`}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.92em",
+            background: "var(--surface-2)",
+            border: "1px solid var(--border-faint)",
+            borderRadius: 4,
+            padding: "1px 5px",
+            color: "var(--accent-text)",
+          }}
+        >
           {p.slice(1, -1)}
         </code>
       );
     }
     if (p.startsWith("**") && p.endsWith("**")) {
-      return <strong key={`${keyBase}-${i}`} style={{ color: "var(--text-1)" }}>{p.slice(2, -2)}</strong>;
+      return (
+        <strong key={`${keyBase}-${i}`} style={{ color: "var(--text-1)" }}>
+          {p.slice(2, -2)}
+        </strong>
+      );
     }
     return p;
   });
@@ -55,7 +68,10 @@ export function Markdown({ text }) {
         return (
           <p key={bi} style={{ margin: 0, fontSize: 14, color: "var(--text-2)", lineHeight: 1.6 }}>
             {lines.map((l, li) => (
-              <React.Fragment key={li}>{li > 0 && <br />}{inline(l, `${bi}-${li}`)}</React.Fragment>
+              <React.Fragment key={li}>
+                {li > 0 && <br />}
+                {inline(l, `${bi}-${li}`)}
+              </React.Fragment>
             ))}
           </p>
         );

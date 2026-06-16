@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * Lätto Tabs — a horizontal tab bar with an amber underline indicator.
  * Controlled via `value`. tabs: [{ value, label, icon? }].
@@ -23,7 +21,7 @@ export function Tabs({ tabs = [], value, onChange, style = {}, ...rest }) {
             key={t.value}
             role="tab"
             aria-selected={active}
-            onClick={() => onChange && onChange(t.value)}
+            onClick={() => onChange?.(t.value)}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -40,8 +38,12 @@ export function Tabs({ tabs = [], value, onChange, style = {}, ...rest }) {
               cursor: "pointer",
               transition: "color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease)",
             }}
-            onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "var(--text-1)"; }}
-            onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "var(--text-3)"; }}
+            onMouseEnter={(e) => {
+              if (!active) e.currentTarget.style.color = "var(--text-1)";
+            }}
+            onMouseLeave={(e) => {
+              if (!active) e.currentTarget.style.color = "var(--text-3)";
+            }}
           >
             {t.icon}
             {t.label}

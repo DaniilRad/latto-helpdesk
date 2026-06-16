@@ -1,5 +1,4 @@
-import React from "react";
-import { Info, CheckCircle2, AlertTriangle, XCircle, Zap, X } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Info, X, XCircle, Zap } from "lucide-react";
 
 /**
  * Lätto Toast — a floating notification card. Tone sets the leading accent
@@ -41,14 +40,33 @@ export function Toast({ tone = "neutral", title, message, onClose, action, style
         <ToneIcon size={18} />
       </span>
       <div style={{ flex: 1, minWidth: 0 }}>
-        {title && <div style={{ fontWeight: "var(--weight-medium)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>{title}</div>}
-        {message && <div style={{ fontSize: "var(--text-sm)", color: "var(--text-2)", marginTop: title ? 2 : 0, lineHeight: 1.45 }}>{message}</div>}
+        {title && (
+          <div style={{ fontWeight: "var(--weight-medium)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>
+            {title}
+          </div>
+        )}
+        {message && (
+          <div
+            style={{ fontSize: "var(--text-sm)", color: "var(--text-2)", marginTop: title ? 2 : 0, lineHeight: 1.45 }}
+          >
+            {message}
+          </div>
+        )}
         {action && (
           <button
             type="button"
             onClick={action.onClick}
-            style={{ marginTop: 8, border: "none", background: "transparent", padding: 0, cursor: "pointer",
-                     color: "var(--accent-text)", fontFamily: "var(--font-sans)", fontSize: "var(--text-sm)", fontWeight: "var(--weight-medium)" }}
+            style={{
+              marginTop: 8,
+              border: "none",
+              background: "transparent",
+              padding: 0,
+              cursor: "pointer",
+              color: "var(--accent-text)",
+              fontFamily: "var(--font-sans)",
+              fontSize: "var(--text-sm)",
+              fontWeight: "var(--weight-medium)",
+            }}
           >
             {action.label}
           </button>
@@ -59,9 +77,21 @@ export function Toast({ tone = "neutral", title, message, onClose, action, style
           type="button"
           aria-label="Dismiss"
           onClick={onClose}
-          style={{ border: "none", background: "transparent", color: "var(--text-3)", cursor: "pointer", padding: 2, flex: "0 0 auto", display: "inline-flex" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-1)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-3)"; }}
+          style={{
+            border: "none",
+            background: "transparent",
+            color: "var(--text-3)",
+            cursor: "pointer",
+            padding: 2,
+            flex: "0 0 auto",
+            display: "inline-flex",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "var(--text-1)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "var(--text-3)";
+          }}
         >
           <X size={16} />
         </button>

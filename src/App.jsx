@@ -1,31 +1,30 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { StoreProvider } from "./lib/store.jsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Shell } from "./components/Shell.jsx";
-import { Dashboard } from "./pages/Dashboard.jsx";
-import { Tickets } from "./pages/Tickets.jsx";
-import { TicketDetail } from "./pages/TicketDetail.jsx";
-import { KbList, KbArticle } from "./pages/Kb.jsx";
-import { Devices } from "./pages/Devices.jsx";
-import { DeviceDetail } from "./pages/DeviceDetail.jsx";
-import { Software } from "./pages/Software.jsx";
-import { UsersPage } from "./pages/Users.jsx";
-import { UserDetail } from "./pages/UserDetail.jsx";
-import { Roles } from "./pages/Roles.jsx";
-import { Settings } from "./pages/Settings.jsx";
-import { Planning } from "./pages/Planning.jsx";
+import { StoreProvider } from "./lib/store.jsx";
+import { Automation } from "./pages/Automation.jsx";
 import { Consumables } from "./pages/Consumables.jsx";
 import { Contracts } from "./pages/Contracts.jsx";
+import { Dashboard } from "./pages/Dashboard.jsx";
+import { DeviceDetail } from "./pages/DeviceDetail.jsx";
+import { Devices } from "./pages/Devices.jsx";
 import { Infrastructure } from "./pages/Infrastructure.jsx";
-import { Reservations } from "./pages/Reservations.jsx";
-import { Problems } from "./pages/Problems.jsx";
+import { KbArticle, KbList } from "./pages/Kb.jsx";
+import { Planning } from "./pages/Planning.jsx";
 import { ProblemDetail } from "./pages/ProblemDetail.jsx";
-import { Automation } from "./pages/Automation.jsx";
+import { Problems } from "./pages/Problems.jsx";
+import { Reservations } from "./pages/Reservations.jsx";
+import { Roles } from "./pages/Roles.jsx";
+import { Settings } from "./pages/Settings.jsx";
+import { Software } from "./pages/Software.jsx";
+import { TicketDetail } from "./pages/TicketDetail.jsx";
+import { Tickets } from "./pages/Tickets.jsx";
+import { UserDetail } from "./pages/UserDetail.jsx";
+import { UsersPage } from "./pages/Users.jsx";
 
 export default function App() {
   return (
     <StoreProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route element={<Shell />}>
             <Route path="/" element={<Dashboard />} />

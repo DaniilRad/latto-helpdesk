@@ -34,8 +34,14 @@ export function Input({
       {icon && <span style={{ display: "inline-flex", color: "var(--text-3)", flex: "0 0 auto" }}>{icon}</span>}
       <input
         aria-invalid={invalid || undefined}
-        onFocus={(e) => { setFocus(true); rest.onFocus && rest.onFocus(e); }}
-        onBlur={(e) => { setFocus(false); rest.onBlur && rest.onBlur(e); }}
+        onFocus={(e) => {
+          setFocus(true);
+          rest.onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocus(false);
+          rest.onBlur?.(e);
+        }}
         {...rest}
         style={{
           flex: 1,
@@ -51,7 +57,14 @@ export function Input({
         }}
       />
       {affix && (
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: "var(--text-3)", flex: "0 0 auto" }}>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "var(--text-xs)",
+            color: "var(--text-3)",
+            flex: "0 0 auto",
+          }}
+        >
           {affix}
         </span>
       )}

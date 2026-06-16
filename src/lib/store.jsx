@@ -1,15 +1,30 @@
 import React from "react";
+import { computePriority, rangesOverlap, SLA_CONFIG, TICKET_STATUS, uid } from "./meta.js";
+import { can, DEFAULT_PROFILES, evaluateRole } from "./rbac.js";
 import {
-  SEED_USERS, SEED_DEVICES, SEED_TICKETS, SEED_KB, SEED_SOFTWARE, SEED_LICENSES,
-  SEED_RULES, SEED_ACTIVITY,
+  SEED_ACTIVITY,
+  SEED_DEVICES,
+  SEED_KB,
+  SEED_LICENSES,
+  SEED_RULES,
+  SEED_SOFTWARE,
+  SEED_TICKETS,
+  SEED_USERS,
 } from "./seed.js";
 import {
-  SEED_ENTITIES, SEED_GROUPS, SEED_CONSUMABLES, SEED_CONTRACTS, SEED_DOMAINS,
-  SEED_DATABASES, SEED_DATACENTERS, SEED_UNMANAGED, SEED_RESERVATIONS, DEFAULT_DASHBOARD,
-  SEED_PROBLEMS, SEED_PROBLEM_LINKS,
+  DEFAULT_DASHBOARD,
+  SEED_CONSUMABLES,
+  SEED_CONTRACTS,
+  SEED_DATABASES,
+  SEED_DATACENTERS,
+  SEED_DOMAINS,
+  SEED_ENTITIES,
+  SEED_GROUPS,
+  SEED_PROBLEM_LINKS,
+  SEED_PROBLEMS,
+  SEED_RESERVATIONS,
+  SEED_UNMANAGED,
 } from "./seed2.js";
-import { uid, computePriority, TICKET_STATUS, SLA_CONFIG, rangesOverlap } from "./meta.js";
-import { DEFAULT_PROFILES, evaluateRole, can } from "./rbac.js";
 
 const LS_KEY = "helpdesk-hub:v4";
 const StoreContext = React.createContext(null);
@@ -81,21 +96,35 @@ export function StoreProvider({ children }) {
   // Automatic action: close resolved tickets after N days (GLPI-style cron, run on load).
   React.useEffect(() => {
     const cutoff = Date.now() - state.autoCloseDays * 86400000;
-    const stale = state.tickets.filter((t) => t.status === "resolved" && t.resolvedAt && new Date(t.resolvedAt).getTime() < cutoff);
+    const stale = state.tickets.filter(
+      (t) => t.status === "resolved" && t.resolvedAt && new Date(t.resolvedAt).getTime() < cutoff,
+    );
     if (stale.length === 0) return;
     setState((s) => ({
       ...s,
       tickets: s.tickets.map((t) =>
         stale.some((x) => x.id === t.id)
           ? {
-              ...t, status: "closed", updatedAt: new Date().toISOString(),
-              timeline: [...t.timeline, { id: uid(), ts: new Date().toISOString(), type: "system", authorId: null, text: `Auto-closed ${s.autoCloseDays} days after resolution` }],
+              ...t,
+              status: "closed",
+              updatedAt: new Date().toISOString(),
+              timeline: [
+                ...t.timeline,
+                {
+                  id: uid(),
+                  ts: new Date().toISOString(),
+                  type: "system",
+                  authorId: null,
+                  text: `Auto-closed ${s.autoCloseDays} days after resolution`,
+                },
+              ],
             }
-          : t),
+          : t,
+      ),
     }));
     // run once per session
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [state.tickets.filter, state.autoCloseDays]);
 
   const api = React.useMemo(() => {
     const log = (text, tone = "neutral") => {
@@ -112,12 +141,16 @@ export function StoreProvider({ children }) {
     };
 
     const touchTicket = (s, id, patch, event) =>
-      s.tickets.map((t) => t.id === id
-        ? {
-            ...t, ...patch, updatedAt: new Date().toISOString(),
-            timeline: event ? [...t.timeline, { id: uid(), ts: new Date().toISOString(), ...event }] : t.timeline,
-          }
-        : t);
+      s.tickets.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              ...patch,
+              updatedAt: new Date().toISOString(),
+              timeline: event ? [...t.timeline, { id: uid(), ts: new Date().toISOString(), ...event }] : t.timeline,
+            }
+          : t,
+      );
 
     // generic list helpers for the small collections
     const addTo = (key, item, msg) => {
@@ -126,11 +159,11 @@ export function StoreProvider({ children }) {
     };
     const saveIn = (key) => (id, patch) =>
       setState((s) => ({ ...s, [key]: s[key].map((x) => (x.id === id ? { ...x, ...patch } : x)) }));
-    const removeFrom = (key) => (id) =>
-      setState((s) => ({ ...s, [key]: s[key].filter((x) => x.id !== id) }));
+    const removeFrom = (key) => (id) => setState((s) => ({ ...s, [key]: s[key].filter((x) => x.id !== id) }));
 
     return {
-      log, toast,
+      log,
+      toast,
       dismissToast: (id) => setToasts((t) => t.filter((x) => x.id !== id)),
       setTheme: (theme) => setState((s) => ({ ...s, theme })),
       setPersona: (personaId) => setState((s) => ({ ...s, personaId, entityFilter: "all" })),
@@ -192,11 +225,17 @@ export function StoreProvider({ children }) {
         const now = new Date().toISOString();
         const author = state.users.find((u) => u.id === t.requesterId);
         const ticket = {
-          groupId: null, ...t, id, number,
+          groupId: null,
+          ...t,
+          id,
+          number,
           entityId: author?.entityId || "e-hq",
           priority: computePriority(t.impact, t.urgency),
           status: t.assigneeId ? "assigned" : "new",
-          createdAt: now, updatedAt: now, firstResponseAt: null, resolvedAt: null,
+          createdAt: now,
+          updatedAt: now,
+          firstResponseAt: null,
+          resolvedAt: null,
           timeline: [{ id: uid(), ts: now, type: "system", authorId, text: "Ticket created via portal" }],
         };
         setState((s) => ({ ...s, nextTicketNo: s.nextTicketNo + 1, tickets: [ticket, ...s.tickets] }));
@@ -210,7 +249,10 @@ export function StoreProvider({ children }) {
         const patch = { status: to };
         if (to === "resolved" && !t.resolvedAt) patch.resolvedAt = new Date().toISOString();
         if (["new", "assigned", "in-progress"].includes(to)) patch.resolvedAt = null;
-        setState((s) => ({ ...s, tickets: touchTicket(s, id, patch, { type: "status", authorId, from: t.status, to }) }));
+        setState((s) => ({
+          ...s,
+          tickets: touchTicket(s, id, patch, { type: "status", authorId, from: t.status, to }),
+        }));
         log(`${t.number} → ${TICKET_STATUS[to].label}`, to === "resolved" ? "success" : "neutral");
       },
       assignTicket: (id, assigneeId, authorId) => {
@@ -222,7 +264,8 @@ export function StoreProvider({ children }) {
         setState((s) => ({
           ...s,
           tickets: touchTicket(s, id, patch, {
-            type: "system", authorId,
+            type: "system",
+            authorId,
             text: assigneeId ? `Assigned to ${who?.displayName || "?"}` : "Unassigned",
           }),
         }));
@@ -233,10 +276,16 @@ export function StoreProvider({ children }) {
         const g = state.groups.find((x) => x.id === groupId);
         setState((s) => ({
           ...s,
-          tickets: touchTicket(s, id, { groupId: groupId || null }, {
-            type: "system", authorId,
-            text: groupId ? `Routed to team ${g?.name || "?"}` : "Removed from team queue",
-          }),
+          tickets: touchTicket(
+            s,
+            id,
+            { groupId: groupId || null },
+            {
+              type: "system",
+              authorId,
+              text: groupId ? `Routed to team ${g?.name || "?"}` : "Removed from team queue",
+            },
+          ),
         }));
       },
       saveTicketMeta: (id, patch) => {
@@ -264,8 +313,17 @@ export function StoreProvider({ children }) {
         const number = `PRB-${String(state.nextProblemNo).padStart(3, "0")}`;
         const now = new Date().toISOString();
         const problem = {
-          status: "open", impact: "medium", urgency: "medium", assigneeId: null,
-          rootCause: "", workaround: "", ...p, id, number, createdAt: now, updatedAt: now,
+          status: "open",
+          impact: "medium",
+          urgency: "medium",
+          assigneeId: null,
+          rootCause: "",
+          workaround: "",
+          ...p,
+          id,
+          number,
+          createdAt: now,
+          updatedAt: now,
         };
         setState((s) => ({ ...s, nextProblemNo: s.nextProblemNo + 1, problems: [problem, ...s.problems] }));
         log(`${number} created`, "success");
@@ -303,10 +361,16 @@ export function StoreProvider({ children }) {
         if (!t) return;
         setState((s) => ({
           ...s,
-          tickets: touchTicket(s, ticketId, { problemId: problemId || null }, {
-            type: "system", authorId: null,
-            text: problemId ? `Linked to problem ${p?.number || "?"}` : "Unlinked from problem",
-          }),
+          tickets: touchTicket(
+            s,
+            ticketId,
+            { problemId: problemId || null },
+            {
+              type: "system",
+              authorId: null,
+              text: problemId ? `Linked to problem ${p?.number || "?"}` : "Unlinked from problem",
+            },
+          ),
         }));
       },
 
@@ -373,10 +437,24 @@ export function StoreProvider({ children }) {
         const um = state.unmanaged.find((x) => x.id === id);
         if (!um) return;
         const device = {
-          id: uid(), name: um.name.toUpperCase().slice(0, 16), type, brand: um.vendor, model: "Discovered",
-          serial: "", status: "in-stock", assignedTo: null, location: "Discovered on network",
-          os: "", cpu: "", ram: "", ip: um.ip, mac: um.mac, purchaseDate: "", warrantyUntil: "",
-          notes: `Approved from network discovery ${new Date().toISOString().slice(0, 10)}`, entityId: "e-hq",
+          id: uid(),
+          name: um.name.toUpperCase().slice(0, 16),
+          type,
+          brand: um.vendor,
+          model: "Discovered",
+          serial: "",
+          status: "in-stock",
+          assignedTo: null,
+          location: "Discovered on network",
+          os: "",
+          cpu: "",
+          ram: "",
+          ip: um.ip,
+          mac: um.mac,
+          purchaseDate: "",
+          warrantyUntil: "",
+          notes: `Approved from network discovery ${new Date().toISOString().slice(0, 10)}`,
+          entityId: "e-hq",
         };
         setState((s) => ({ ...s, devices: [device, ...s.devices], unmanaged: s.unmanaged.filter((x) => x.id !== id) }));
         log(`${um.name} approved into inventory`, "success");
@@ -505,8 +583,10 @@ export function StoreProvider({ children }) {
     // Staff see everything (optionally narrowed by the topbar entity filter);
     // end-users and externals are hard-scoped to their own entity.
     const activeEntity = isStaff
-      ? (state.entityFilter !== "all" ? state.entityFilter : null)
-      : (persona.entityId || "e-hq");
+      ? state.entityFilter !== "all"
+        ? state.entityFilter
+        : null
+      : persona.entityId || "e-hq";
     const scope = (arr) => (activeEntity ? arr.filter((x) => (x.entityId || "e-hq") === activeEntity) : arr);
 
     return {
@@ -524,10 +604,7 @@ export function StoreProvider({ children }) {
     };
   }, [state]);
 
-  const value = React.useMemo(
-    () => ({ ...state, ...api, ...derived, toasts }),
-    [state, api, derived, toasts],
-  );
+  const value = React.useMemo(() => ({ ...state, ...api, ...derived, toasts }), [state, api, derived, toasts]);
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
 

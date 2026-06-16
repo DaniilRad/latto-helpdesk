@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * Lätto Button — the primary action primitive.
  * Variants: primary (amber fill), secondary (surface), ghost (transparent),
@@ -67,21 +65,27 @@ export function Button({
     borderRadius: "var(--radius-md)",
     cursor: disabled ? "not-allowed" : "pointer",
     opacity: disabled ? 0.7 : 1,
-    transition: "background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease)",
+    transition:
+      "background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease)",
     userSelect: "none",
     whiteSpace: "nowrap",
     ...(disabled ? disabledPalette : palettes[variant]),
     ...style,
   };
 
-  const onDown = (e) => { if (!disabled) e.currentTarget.style.transform = "translateY(0.5px) scale(0.99)"; };
-  const onUp = (e) => { e.currentTarget.style.transform = "none"; };
+  const onDown = (e) => {
+    if (!disabled) e.currentTarget.style.transform = "translateY(0.5px) scale(0.99)";
+  };
+  const onUp = (e) => {
+    e.currentTarget.style.transform = "none";
+  };
   const onEnter = (e) => {
     if (disabled) return;
     if (variant === "primary") e.currentTarget.style.background = "var(--accent-hover)";
     else if (variant === "secondary") e.currentTarget.style.background = "var(--surface-3)";
     else if (variant === "ghost") e.currentTarget.style.background = "var(--surface-2)";
-    else if (variant === "danger") e.currentTarget.style.background = "color-mix(in srgb, var(--danger) 22%, transparent)";
+    else if (variant === "danger")
+      e.currentTarget.style.background = "color-mix(in srgb, var(--danger) 22%, transparent)";
   };
   const onLeave = (e) => {
     e.currentTarget.style.background = disabled ? disabledPalette.background : palettes[variant].background;
