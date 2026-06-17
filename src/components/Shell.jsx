@@ -120,7 +120,7 @@ function Sidebar() {
             color: "var(--text-3)",
             border: "1px solid var(--border)",
             padding: "2px 6px",
-            borderRadius: 6,
+            borderRadius: "var(--radius-sm)",
           }}
         >
           v0.3
