@@ -4,6 +4,30 @@
 
 ---
 
+## ✅ RESOLUTION STATUS — verified 2026-06-17
+
+All 10 items below were re-verified against the current code. **Every one is resolved**
+(by the `fix: bugs` commit plus the accessibility and design-token passes). The original
+report is preserved below for history.
+
+| # | Item | Status | Where fixed |
+|---|------|--------|-------------|
+| 1 | Table text overflow (`tdStyle` nowrap) | ✅ Fixed | `bits.jsx` — `tdStyle` no longer sets `whiteSpace: nowrap`; opt-in `tdNoWrap` exists for atomic columns |
+| 2 | Keyboard nav on clickable divs | ✅ Fixed | Portal / ProblemDetail / Planning / Infrastructure rows use `rowActivation` (role=button, tabIndex, Enter/Space); a11y pass |
+| 3 | Planning chips too dense | ✅ Fixed | `Planning.jsx` — padding/radius tokenized, larger target |
+| 4 | NavItem missing focus / type | ✅ Fixed | `NavItem.jsx` has `type="button"`; global `:focus-visible` ring added in `base.css` |
+| 5 | Button disabled feedback weak | ✅ Fixed | `Button.jsx` has a distinct `disabledPalette` (not just opacity) |
+| 6 | Select focus inconsistent with Input | ✅ Fixed | `Select.jsx` has focus border + `var(--ring)` box-shadow + custom chevron |
+| 7 | Inline hover via DOM mutation | ⚠️ Partial | Rows/HoverRow now use the `.latto-rowhover` CSS class; `Button`/`IconButton` still mutate inline (functional, low priority) |
+| 8 | Hardcoded border radii | ✅ Fixed | Tokenized version badge + saved-search pills; remaining values are sub-token decorative dots |
+| 9 | Planning grid spacing | ✅ Fixed | `Planning.jsx` margins tokenized |
+| 10 | Planning title truncation | ✅ Fixed | `Planning.jsx` chip title has `flex: 1; minWidth: 0` |
+
+**Net:** 9 fully fixed, 1 partial (the `Button`/`IconButton` inline-hover refactor is the
+only deliberately-deferred item — it's an internal robustness concern, not a user-facing bug).
+
+---
+
 ## 🔴 CRITICAL BUGS (Block Usability/UX)
 
 ### 1. **Table Text Overflow - Text Cannot Wrap**

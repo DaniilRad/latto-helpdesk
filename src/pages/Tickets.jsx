@@ -173,7 +173,7 @@ export function Tickets() {
                 padding: "0 6px 0 0",
                 background: "var(--surface-2)",
                 border: "1px solid var(--border)",
-                borderRadius: 999,
+                borderRadius: "var(--radius-full)",
                 fontSize: 12,
                 color: "var(--text-1)",
               }}
@@ -203,7 +203,7 @@ export function Tickets() {
                   color: "var(--text-3)",
                   cursor: "pointer",
                   padding: 2,
-                  borderRadius: 999,
+                  borderRadius: "var(--radius-full)",
                 }}
                 title="Delete saved search"
               >
