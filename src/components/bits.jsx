@@ -1,14 +1,14 @@
 import React from "react";
 import { Card } from "../ds";
 
-/** Mono uppercase eyebrow label. */
+/** Mono uppercase eyebrow label. Mirrors the `.latto-eyebrow` token recipe. */
 export function Eyebrow({ children, style = {} }) {
   return (
     <div
       style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: 11,
-        letterSpacing: ".12em",
+        fontFamily: "var(--font-label)",
+        fontSize: "var(--text-xs)",
+        letterSpacing: "var(--tracking-caps)",
         textTransform: "uppercase",
         color: "var(--text-3)",
         ...style,
@@ -21,15 +21,34 @@ export function Eyebrow({ children, style = {} }) {
 
 export function PageHeader({ title, eyebrow, actions, children }) {
   return (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-end",
+        gap: "var(--space-4)",
+        marginBottom: "var(--space-5)",
+        flexWrap: "wrap",
+      }}
+    >
       <div style={{ flex: 1, minWidth: 220 }}>
-        {eyebrow && <Eyebrow style={{ marginBottom: 6 }}>{eyebrow}</Eyebrow>}
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.02em", margin: 0, color: "var(--text-1)" }}>
+        {eyebrow && <Eyebrow style={{ marginBottom: "var(--space-2)" }}>{eyebrow}</Eyebrow>}
+        <h2
+          style={{
+            fontSize: "var(--text-xl)",
+            fontWeight: "var(--weight-bold)",
+            letterSpacing: "var(--tracking-tight)",
+            lineHeight: "var(--leading-tight)",
+            margin: 0,
+            color: "var(--text-1)",
+          }}
+        >
           {title}
         </h2>
         {children}
       </div>
-      {actions && <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>{actions}</div>}
+      {actions && (
+        <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center", flexWrap: "wrap" }}>{actions}</div>
+      )}
     </div>
   );
 }
@@ -60,12 +79,12 @@ export function Field({ label, children, span = 1, required = false, error = nul
 export const thStyle = {
   textAlign: "left",
   padding: "10px 14px",
-  fontFamily: "var(--font-mono)",
-  fontSize: 11,
-  letterSpacing: ".1em",
+  fontFamily: "var(--font-label)",
+  fontSize: "var(--text-xs)",
+  letterSpacing: "var(--tracking-caps)",
   textTransform: "uppercase",
   color: "var(--text-3)",
-  fontWeight: 500,
+  fontWeight: "var(--weight-medium)",
   borderBottom: "1px solid var(--border)",
   whiteSpace: "nowrap",
 };
@@ -246,11 +265,15 @@ export function StatCard({ label, value, sub, tone }) {
           ? "var(--success)"
           : "var(--text-3)";
   return (
-    <Card padding="16px 18px">
+    <Card padding="var(--space-4) var(--space-5)">
       <Eyebrow>{label}</Eyebrow>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 6 }}>
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: 26, color: "var(--text-1)" }}>{value}</span>
-        {sub && <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: subColor }}>{sub}</span>}
+      <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-2)", marginTop: "var(--space-2)" }}>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xl)", color: "var(--text-1)" }}>
+          {value}
+        </span>
+        {sub && (
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", color: subColor }}>{sub}</span>
+        )}
       </div>
     </Card>
   );
