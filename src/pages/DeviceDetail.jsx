@@ -133,6 +133,7 @@ export function DeviceDetail() {
           {owner ? (
             <Link to={`/users/${owner.id}`} style={{ textDecoration: "none" }}>
               <div
+                className="latto-rowhover"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -140,13 +141,6 @@ export function DeviceDetail() {
                   padding: 10,
                   margin: -10,
                   borderRadius: "var(--radius-md)",
-                  transition: "background var(--dur-fast) var(--ease)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "var(--surface-2)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "transparent";
                 }}
               >
                 <Avatar name={owner.displayName} size={40} />

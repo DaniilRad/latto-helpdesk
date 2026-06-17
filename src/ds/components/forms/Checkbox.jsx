@@ -7,9 +7,11 @@ export function Checkbox({ checked = false, onChange, disabled = false, label, s
     if (!disabled && onChange) onChange(!checked);
   };
   const box = (
+    // biome-ignore lint/a11y/useSemanticElements: intentional custom-styled ARIA checkbox widget (focusable, Space-operable, announces state).
     <span
       role="checkbox"
       aria-checked={checked}
+      aria-label={typeof label === "string" ? label : undefined}
       tabIndex={disabled ? -1 : 0}
       onClick={toggle}
       onKeyDown={(e) => {
@@ -37,6 +39,7 @@ export function Checkbox({ checked = false, onChange, disabled = false, label, s
     >
       {checked && (
         <svg
+          aria-hidden="true"
           width="12"
           height="12"
           viewBox="0 0 24 24"
@@ -53,7 +56,7 @@ export function Checkbox({ checked = false, onChange, disabled = false, label, s
   );
   if (!label) return box;
   return (
-    <label
+    <span
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -65,6 +68,6 @@ export function Checkbox({ checked = false, onChange, disabled = false, label, s
       <span style={{ fontFamily: "var(--font-sans)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>
         {label}
       </span>
-    </label>
+    </span>
   );
 }

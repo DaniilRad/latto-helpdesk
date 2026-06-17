@@ -68,6 +68,7 @@ export function Dialog({ open, onClose, title, description, children, actions = 
 
   if (!open) return null;
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: backdrop scrim; click-outside-to-close is a mouse convenience, with Escape and the focus trap providing the keyboard path.
     <div
       onMouseDown={(e) => {
         if (e.target === e.currentTarget && onClose) onClose();

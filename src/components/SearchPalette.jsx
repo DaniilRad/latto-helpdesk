@@ -54,24 +54,29 @@ export function SearchPalette() {
     if (softwareHits[0]) return go("/software");
   };
 
-  // Keyboard-accessible result row: shared `.latto-rowhover` lights up on hover
-  // and keyboard focus alike; button semantics make Tab/Enter/Space work.
+  // Keyboard-accessible result row: a real <button> (native Enter/Space + focus)
+  // reset to look like a row, using `.latto-rowhover` for hover/focus parity.
   const Row = ({ onClick, children }) => (
-    <div
+    <button
+      type="button"
       className="latto-rowhover"
-      role="button"
-      tabIndex={0}
       onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onClick();
-        }
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "8px 14px",
+        cursor: "pointer",
+        width: "100%",
+        border: "none",
+        background: "transparent",
+        font: "inherit",
+        color: "inherit",
+        textAlign: "left",
       }}
-      style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", cursor: "pointer" }}
     >
       {children}
-    </div>
+    </button>
   );
 
   const Section = ({ title, children }) => (

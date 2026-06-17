@@ -36,26 +36,27 @@ const listRow = (onClick) => ({
   borderTop: "1px solid var(--border-faint)",
 });
 
-/* Keyboard-accessible navigation row. Uses the shared `.latto-rowhover`
-   class so hover AND keyboard focus light up identically, and exposes
-   button semantics so Tab/Enter/Space work for non-mouse users. */
+/* Keyboard-accessible navigation row. A real <button> (native Enter/Space and
+   focus), reset to look like a row, using the shared `.latto-rowhover` class so
+   hover and keyboard focus light up identically. */
 function NavRow({ onClick, style, children }) {
   return (
-    <div
+    <button
+      type="button"
       className="latto-rowhover"
-      role="button"
-      tabIndex={0}
       onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onClick(e);
-        }
+      style={{
+        border: "none",
+        background: "transparent",
+        width: "100%",
+        font: "inherit",
+        color: "inherit",
+        textAlign: "left",
+        ...style,
       }}
-      style={style}
     >
       {children}
-    </div>
+    </button>
   );
 }
 

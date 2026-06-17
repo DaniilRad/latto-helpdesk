@@ -414,7 +414,8 @@ function TreeRow({ depth, icon, label, sub, badge, open, onToggle, accent, inter
   const clickable = Boolean(onToggle) || interactive;
   return (
     <div
-      {...(onToggle ? { ...rowActivation(onToggle), "aria-expanded": open, "aria-label": label } : {})}
+      {...(onToggle ? rowActivation(onToggle, { label, expanded: open }) : {})}
+      className={clickable ? "latto-rowhover" : undefined}
       style={{
         display: "flex",
         alignItems: "center",
@@ -423,12 +424,6 @@ function TreeRow({ depth, icon, label, sub, badge, open, onToggle, accent, inter
         paddingLeft: 10 + depth * 22,
         cursor: clickable ? "pointer" : "default",
         borderRadius: "var(--radius-sm)",
-      }}
-      onMouseEnter={(e) => {
-        if (clickable) e.currentTarget.style.background = "var(--surface-2)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "transparent";
       }}
     >
       {onToggle ? (

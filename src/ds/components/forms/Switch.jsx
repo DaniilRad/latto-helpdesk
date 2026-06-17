@@ -10,6 +10,7 @@ export function Switch({ checked = false, onChange, disabled = false, size = "md
     <span
       role="switch"
       aria-checked={checked}
+      aria-label={typeof label === "string" ? label : undefined}
       tabIndex={disabled ? -1 : 0}
       onClick={toggle}
       onKeyDown={(e) => {
@@ -52,7 +53,7 @@ export function Switch({ checked = false, onChange, disabled = false, size = "md
   );
   if (!label) return control;
   return (
-    <label
+    <span
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -64,6 +65,6 @@ export function Switch({ checked = false, onChange, disabled = false, size = "md
       <span style={{ fontFamily: "var(--font-sans)", fontSize: "var(--text-sm)", color: "var(--text-1)" }}>
         {label}
       </span>
-    </label>
+    </span>
   );
 }

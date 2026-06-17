@@ -169,23 +169,33 @@ export function Tickets() {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 6,
-                padding: "4px 6px 4px 12px",
+                gap: 2,
+                padding: "0 6px 0 0",
                 background: "var(--surface-2)",
                 border: "1px solid var(--border)",
                 borderRadius: 999,
                 fontSize: 12,
                 color: "var(--text-1)",
-                cursor: "pointer",
               }}
-              onClick={() => applySearch(s)}
             >
-              {s.name}
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteSavedSearch(s.id);
+                type="button"
+                onClick={() => applySearch(s)}
+                title="Apply saved search"
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  color: "inherit",
+                  font: "inherit",
+                  cursor: "pointer",
+                  padding: "4px 4px 4px 12px",
                 }}
+              >
+                {s.name}
+              </button>
+              <button
+                type="button"
+                onClick={() => deleteSavedSearch(s.id)}
                 style={{
                   display: "inline-flex",
                   border: "none",

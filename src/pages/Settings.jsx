@@ -106,6 +106,7 @@ export function Settings() {
           <p style={{ fontSize: 13, color: "var(--text-3)", margin: "0 0 16px" }}>
             Resolved tickets close automatically after a quiet period (GLPI-style cron, runs on load).
           </p>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: the control is the <Input> wrapped by this label. */}
           <label style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Eyebrow>Auto-close resolved after</Eyebrow>
             <Input

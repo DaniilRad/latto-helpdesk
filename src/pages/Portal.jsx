@@ -80,8 +80,7 @@ export function Portal() {
               mine.slice(0, 5).map((t, i) => (
                 <div
                   key={t.id}
-                  {...rowActivation(() => nav(`/tickets/${t.id}`))}
-                  aria-label={`Ticket ${t.number}: ${t.title}`}
+                  {...rowActivation(() => nav(`/tickets/${t.id}`), { label: `Ticket ${t.number}: ${t.title}` })}
                   className="latto-rowhover"
                   style={{
                     display: "flex",
@@ -152,8 +151,7 @@ export function Portal() {
               hits.map((a, i) => (
                 <div
                   key={a.id}
-                  {...rowActivation(() => nav(`/kb/${a.id}`))}
-                  aria-label={`Article: ${a.title}`}
+                  {...rowActivation(() => nav(`/kb/${a.id}`), { label: `Article: ${a.title}` })}
                   className="latto-rowhover"
                   style={{
                     display: "flex",

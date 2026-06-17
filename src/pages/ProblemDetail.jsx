@@ -10,17 +10,8 @@ import { useStore } from "../lib/store.jsx";
 export function ProblemDetail() {
   const { id } = useParams();
   const nav = useNavigate();
-  const {
-    problems,
-    tickets,
-    users,
-    persona,
-    hasPerm,
-    saveProblem,
-    setProblemStatus,
-    deleteProblem,
-    linkTicketToProblem,
-  } = useStore();
+  const { problems, tickets, users, hasPerm, saveProblem, setProblemStatus, deleteProblem, linkTicketToProblem } =
+    useStore();
 
   const problem = problems.find((p) => p.id === id);
   const canWork = hasPerm("tickets.edit");
@@ -190,8 +181,7 @@ export function ProblemDetail() {
                 return (
                   <div
                     key={t.id}
-                    {...rowActivation(() => nav(`/tickets/${t.id}`))}
-                    aria-label={`Ticket ${t.number}: ${t.title}`}
+                    {...rowActivation(() => nav(`/tickets/${t.id}`), { label: `Ticket ${t.number}: ${t.title}` })}
                     className="latto-rowhover"
                     style={{
                       display: "flex",

@@ -13,6 +13,7 @@ export function Tooltip({ label, side = "top", children, style = {} }) {
     right: { left: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" },
   };
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: non-interactive wrapper whose hover/focus only reveals the tooltip; the trigger lives in `children`.
     <span
       style={{ position: "relative", display: "inline-flex", ...style }}
       onMouseEnter={() => setShow(true)}

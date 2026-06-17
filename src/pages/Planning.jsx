@@ -126,11 +126,11 @@ export function Planning() {
                   </div>
                 )}
                 {dayTickets.slice(0, 3).map((t) => (
+                  // biome-ignore lint/a11y/noStaticElementInteractions: button role + activation come from rowActivation (spread, invisible to the linter); these handlers only do cosmetic hover.
                   <div
                     key={t.id}
-                    {...rowActivation(() => nav(`/tickets/${t.id}`))}
+                    {...rowActivation(() => nav(`/tickets/${t.id}`), { label: `Ticket ${t.number}: ${t.title}` })}
                     title={`${t.number} · ${t.title}`}
-                    aria-label={`Ticket ${t.number}: ${t.title}`}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -176,11 +176,13 @@ export function Planning() {
                   </span>
                 )}
                 {dayRes.map((r) => (
+                  // biome-ignore lint/a11y/noStaticElementInteractions: button role + activation come from rowActivation (spread, invisible to the linter); these handlers only do cosmetic hover.
                   <div
                     key={r.id}
-                    {...rowActivation(() => nav("/reservations"))}
+                    {...rowActivation(() => nav("/reservations"), {
+                      label: `Reservation: ${devices.find((x) => x.id === r.assetId)?.name || "asset"}`,
+                    })}
                     title={r.note}
-                    aria-label={`Reservation: ${devices.find((x) => x.id === r.assetId)?.name || "asset"}`}
                     style={{
                       display: "flex",
                       alignItems: "center",

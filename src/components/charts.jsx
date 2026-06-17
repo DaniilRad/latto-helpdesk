@@ -137,7 +137,13 @@ export function Donut({ segments, size = 148, stroke = 16, centerLabel }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
       <div style={{ position: "relative", flex: "0 0 auto", width: size, height: size }}>
-        <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+        <svg
+          width={size}
+          height={size}
+          role="img"
+          aria-label={`${centerLabel || "Donut chart"}: ${segments.map((s) => `${s.label} ${s.value}`).join(", ")}`}
+          style={{ transform: "rotate(-90deg)" }}
+        >
           <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={stroke} />
           {total > 0 &&
             segments.map((s) => {

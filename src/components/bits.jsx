@@ -37,6 +37,7 @@ export function PageHeader({ title, eyebrow, actions, children }) {
 /** Form field: mono label above a control, with optional required mark + error. */
 export function Field({ label, children, span = 1, required = false, error = null }) {
   return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: the form control is passed in as `children` and wrapped by this label.
     <label style={{ display: "flex", flexDirection: "column", gap: 6, gridColumn: `span ${span}` }}>
       <Eyebrow>
         {label}
@@ -105,45 +106,47 @@ export function SortableTh({ k, sort, children, align = "left", style = {} }) {
   const active = sort.sortKey === k;
   return (
     <th
-      onClick={() => sort.toggle(k)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          sort.toggle(k);
-        }
-      }}
-      role="button"
-      tabIndex={0}
       aria-sort={active ? (sort.sortDir === 1 ? "ascending" : "descending") : "none"}
-      title="Sort by this column"
-      style={{
-        ...thStyle,
-        textAlign: align,
-        cursor: "pointer",
-        userSelect: "none",
-        color: active ? "var(--accent-text)" : "var(--text-3)",
-        ...style,
-      }}
-      onMouseEnter={(e) => {
-        if (!active) e.currentTarget.style.color = "var(--text-1)";
-      }}
-      onMouseLeave={(e) => {
-        if (!active) e.currentTarget.style.color = "var(--text-3)";
-      }}
+      style={{ ...thStyle, textAlign: align, ...style }}
     >
-      {children}
-      <span
-        aria-hidden="true"
+      <button
+        type="button"
+        onClick={() => sort.toggle(k)}
+        title="Sort by this column"
         style={{
-          marginLeft: 5,
-          fontSize: 11,
+          display: "inline-flex",
+          alignItems: "center",
+          border: "none",
+          background: "transparent",
+          padding: 0,
+          font: "inherit",
+          letterSpacing: "inherit",
+          textTransform: "inherit",
+          cursor: "pointer",
+          userSelect: "none",
           color: active ? "var(--accent-text)" : "var(--text-3)",
-          opacity: active ? 1 : 0.45,
-          fontWeight: active ? 700 : 400,
+        }}
+        onMouseEnter={(e) => {
+          if (!active) e.currentTarget.style.color = "var(--text-1)";
+        }}
+        onMouseLeave={(e) => {
+          if (!active) e.currentTarget.style.color = "var(--text-3)";
         }}
       >
-        {active ? (sort.sortDir === 1 ? "↑" : "↓") : "⇅"}
-      </span>
+        {children}
+        <span
+          aria-hidden="true"
+          style={{
+            marginLeft: 5,
+            fontSize: 11,
+            color: active ? "var(--accent-text)" : "var(--text-3)",
+            opacity: active ? 1 : 0.45,
+            fontWeight: active ? 700 : 400,
+          }}
+        >
+          {active ? (sort.sortDir === 1 ? "↑" : "↓") : "⇅"}
+        </span>
+      </button>
     </th>
   );
 }
@@ -166,11 +169,15 @@ export const tdNoWrap = { ...tdStyle, whiteSpace: "nowrap" };
  * The global :focus-visible ring (base.css) supplies the focus affordance.
  * Activation is ignored when the event originates from a nested control.
  */
-export function rowActivation(onActivate) {
+export function rowActivation(onActivate, opts = {}) {
   return {
     role: "button",
     tabIndex: 0,
     onClick: onActivate,
+    // Carrying the accessible name here (rather than as a literal JSX attribute
+    // on the element) keeps aria-label paired with the role this helper sets.
+    ...(opts.label !== undefined ? { "aria-label": opts.label } : {}),
+    ...(opts.expanded !== undefined ? { "aria-expanded": opts.expanded } : {}),
     onKeyDown: (e) => {
       if (e.target !== e.currentTarget) return;
       if (e.key === "Enter" || e.key === " ") {

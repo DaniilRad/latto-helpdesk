@@ -145,19 +145,13 @@ export function UserDetail() {
               return (
                 <Link key={d.id} to={`/devices/${d.id}`} style={{ textDecoration: "none" }}>
                   <div
+                    className="latto-rowhover"
                     style={{
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
                       padding: "11px 18px",
                       borderTop: i === 0 ? "none" : "1px solid var(--border-faint)",
-                      transition: "background var(--dur-fast) var(--ease)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "var(--surface-2)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "transparent";
                     }}
                   >
                     <t.icon size={16} style={{ color: t.color, flex: "0 0 auto" }} />
