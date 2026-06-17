@@ -48,9 +48,9 @@ function TechDashboard() {
       />
 
       {editing && unused.length > 0 && (
-        <Card padding="14px 18px" style={{ marginBottom: 16 }}>
-          <Eyebrow style={{ marginBottom: 10 }}>ADD WIDGET</Eyebrow>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Card padding="var(--space-4) var(--space-5)" style={{ marginBottom: "var(--space-4)" }}>
+          <Eyebrow style={{ marginBottom: "var(--space-3)" }}>ADD WIDGET</Eyebrow>
+          <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
             {unused.map((k) => (
               <Button key={k} variant="secondary" size="sm" iconLeft={<Plus size={14} />} onClick={() => add(k)}>
                 {WIDGETS[k].title}
@@ -60,7 +60,9 @@ function TechDashboard() {
         </Card>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, alignItems: "stretch" }}>
+      <div
+        style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--space-4)", alignItems: "stretch" }}
+      >
         {layout.map((w, idx) => {
           const def = WIDGETS[w.key];
           const Comp = def.component;

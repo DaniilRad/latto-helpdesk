@@ -30,8 +30,8 @@ const TICKET_COLORS = {
 const listRow = (onClick) => ({
   display: "flex",
   alignItems: "center",
-  gap: 10,
-  padding: "9px 18px",
+  gap: "var(--space-3)",
+  padding: "var(--space-2) var(--space-5)",
   cursor: onClick ? "pointer" : "default",
   borderTop: "1px solid var(--border-faint)",
 });
@@ -63,12 +63,21 @@ function NavRow({ onClick, style, children }) {
 function ListCard({ title, action, empty, children }) {
   return (
     <Card padding="0" style={{ height: "100%" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px 8px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "var(--space-4) var(--space-5) var(--space-2)",
+        }}
+      >
         <Eyebrow>{title}</Eyebrow>
         {action}
       </div>
       {React.Children.count(children) === 0 ? (
-        <p style={{ padding: "0 18px 16px", margin: 0, color: "var(--text-3)", fontSize: 13 }}>{empty}</p>
+        <p style={{ padding: "0 var(--space-5) var(--space-4)", margin: 0, color: "var(--text-3)", fontSize: 13 }}>
+          {empty}
+        </p>
       ) : (
         children
       )}
@@ -307,10 +316,10 @@ function Activity() {
   const { activity } = useStore();
   return (
     <Card padding="0" style={{ height: "100%" }}>
-      <div style={{ padding: "14px 18px 6px" }}>
+      <div style={{ padding: "var(--space-4) var(--space-5) var(--space-2)" }}>
         <Eyebrow>RECENT ACTIVITY</Eyebrow>
       </div>
-      <div style={{ padding: "0 18px 12px", display: "flex", flexDirection: "column" }}>
+      <div style={{ padding: "0 var(--space-5) var(--space-3)", display: "flex", flexDirection: "column" }}>
         {activity.slice(0, 7).map((a) => (
           <div key={a.id} style={{ display: "flex", gap: 10, padding: "6px 0", alignItems: "baseline" }}>
             <span
