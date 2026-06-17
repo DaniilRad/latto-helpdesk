@@ -4,8 +4,16 @@ import { Card } from "../ds";
 /** Mono uppercase eyebrow label. */
 export function Eyebrow({ children, style = {} }) {
   return (
-    <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em",
-      textTransform: "uppercase", color: "var(--text-3)", ...style }}>
+    <div
+      style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: 11,
+        letterSpacing: ".12em",
+        textTransform: "uppercase",
+        color: "var(--text-3)",
+        ...style,
+      }}
+    >
       {children}
     </div>
   );
@@ -29,10 +37,15 @@ export function PageHeader({ title, eyebrow, actions, children }) {
 /** Form field: mono label above a control, with optional required mark + error. */
 export function Field({ label, children, span = 1, required = false, error = null }) {
   return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: the form control is passed in as `children` and wrapped by this label.
     <label style={{ display: "flex", flexDirection: "column", gap: 6, gridColumn: `span ${span}` }}>
       <Eyebrow>
         {label}
-        {required && <span style={{ color: "var(--danger)", marginLeft: 4 }} aria-hidden="true">*</span>}
+        {required && (
+          <span style={{ color: "var(--danger)", marginLeft: 4 }} aria-hidden="true">
+            *
+          </span>
+        )}
       </Eyebrow>
       {children}
       {error && (
@@ -45,9 +58,16 @@ export function Field({ label, children, span = 1, required = false, error = nul
 }
 
 export const thStyle = {
-  textAlign: "left", padding: "10px 14px", fontFamily: "var(--font-mono)", fontSize: 11,
-  letterSpacing: ".1em", textTransform: "uppercase", color: "var(--text-3)", fontWeight: 500,
-  borderBottom: "1px solid var(--border)", whiteSpace: "nowrap",
+  textAlign: "left",
+  padding: "10px 14px",
+  fontFamily: "var(--font-mono)",
+  fontSize: 11,
+  letterSpacing: ".1em",
+  textTransform: "uppercase",
+  color: "var(--text-3)",
+  fontWeight: 500,
+  borderBottom: "1px solid var(--border)",
+  whiteSpace: "nowrap",
 };
 
 /**
@@ -59,13 +79,17 @@ export function useSort(rows, getters, defaultKey = null, defaultDir = 1) {
   const [dir, setDir] = React.useState(defaultDir);
   const toggle = (k) => {
     if (k === key) setDir((d) => -d);
-    else { setKey(k); setDir(1); }
+    else {
+      setKey(k);
+      setDir(1);
+    }
   };
   const sorted = React.useMemo(() => {
     if (!key || !getters[key]) return rows;
     const get = getters[key];
     return [...rows].sort((a, b) => {
-      const va = get(a), vb = get(b);
+      const va = get(a),
+        vb = get(b);
       if (va == null && vb == null) return 0;
       if (va == null) return 1;
       if (vb == null) return -1;
@@ -82,30 +106,58 @@ export function SortableTh({ k, sort, children, align = "left", style = {} }) {
   const active = sort.sortKey === k;
   return (
     <th
-      onClick={() => sort.toggle(k)}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); sort.toggle(k); } }}
-      role="button"
-      tabIndex={0}
       aria-sort={active ? (sort.sortDir === 1 ? "ascending" : "descending") : "none"}
-      title="Sort by this column"
-      style={{ ...thStyle, textAlign: align, cursor: "pointer", userSelect: "none",
-        color: active ? "var(--accent-text)" : "var(--text-3)", ...style }}
-      onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "var(--text-1)"; }}
-      onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "var(--text-3)"; }}
+      style={{ ...thStyle, textAlign: align, ...style }}
     >
-      {children}
-      <span aria-hidden="true" style={{ marginLeft: 5, fontSize: 11,
-        color: active ? "var(--accent-text)" : "var(--text-3)",
-        opacity: active ? 1 : 0.45, fontWeight: active ? 700 : 400 }}>
-        {active ? (sort.sortDir === 1 ? "↑" : "↓") : "⇅"}
-      </span>
+      <button
+        type="button"
+        onClick={() => sort.toggle(k)}
+        title="Sort by this column"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          border: "none",
+          background: "transparent",
+          padding: 0,
+          font: "inherit",
+          letterSpacing: "inherit",
+          textTransform: "inherit",
+          cursor: "pointer",
+          userSelect: "none",
+          color: active ? "var(--accent-text)" : "var(--text-3)",
+        }}
+        onMouseEnter={(e) => {
+          if (!active) e.currentTarget.style.color = "var(--text-1)";
+        }}
+        onMouseLeave={(e) => {
+          if (!active) e.currentTarget.style.color = "var(--text-3)";
+        }}
+      >
+        {children}
+        <span
+          aria-hidden="true"
+          style={{
+            marginLeft: 5,
+            fontSize: 11,
+            color: active ? "var(--accent-text)" : "var(--text-3)",
+            opacity: active ? 1 : 0.45,
+            fontWeight: active ? 700 : 400,
+          }}
+        >
+          {active ? (sort.sortDir === 1 ? "↑" : "↓") : "⇅"}
+        </span>
+      </button>
     </th>
   );
 }
 
 export const tdStyle = {
-  padding: "11px 14px", fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--text-2)",
-  borderBottom: "1px solid var(--border-faint)", verticalAlign: "middle",
+  padding: "11px 14px",
+  fontFamily: "var(--font-mono)",
+  fontSize: 13,
+  color: "var(--text-2)",
+  borderBottom: "1px solid var(--border-faint)",
+  verticalAlign: "middle",
 };
 
 /** Keep short, atomic cells (IDs, dates, numbers, badges) on a single line. */
@@ -117,14 +169,21 @@ export const tdNoWrap = { ...tdStyle, whiteSpace: "nowrap" };
  * The global :focus-visible ring (base.css) supplies the focus affordance.
  * Activation is ignored when the event originates from a nested control.
  */
-export function rowActivation(onActivate) {
+export function rowActivation(onActivate, opts = {}) {
   return {
     role: "button",
     tabIndex: 0,
     onClick: onActivate,
+    // Carrying the accessible name here (rather than as a literal JSX attribute
+    // on the element) keeps aria-label paired with the role this helper sets.
+    ...(opts.label !== undefined ? { "aria-label": opts.label } : {}),
+    ...(opts.expanded !== undefined ? { "aria-expanded": opts.expanded } : {}),
     onKeyDown: (e) => {
       if (e.target !== e.currentTarget) return;
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onActivate(e); }
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onActivate(e);
+      }
     },
   };
 }
@@ -140,11 +199,7 @@ export function TableCard({ children }) {
 
 export function HoverRow({ onClick, children }) {
   return (
-    <tr
-      className="latto-rowhover"
-      style={{ cursor: onClick ? "pointer" : "default" }}
-      onClick={onClick}
-    >
+    <tr className="latto-rowhover" style={{ cursor: onClick ? "pointer" : "default" }} onClick={onClick}>
       {children}
     </tr>
   );
@@ -154,8 +209,17 @@ export function HoverRow({ onClick, children }) {
 export function TableEmptyRow({ colSpan, children = "Nothing here yet." }) {
   return (
     <tr>
-      <td colSpan={colSpan} style={{ ...tdStyle, textAlign: "center", color: "var(--text-3)",
-        padding: "26px 14px", fontFamily: "var(--font-sans)", borderBottom: "none" }}>
+      <td
+        colSpan={colSpan}
+        style={{
+          ...tdStyle,
+          textAlign: "center",
+          color: "var(--text-3)",
+          padding: "26px 14px",
+          fontFamily: "var(--font-sans)",
+          borderBottom: "none",
+        }}
+      >
         {children}
       </td>
     </tr>
@@ -173,8 +237,14 @@ export function EmptyState({ icon, text, action }) {
 }
 
 export function StatCard({ label, value, sub, tone }) {
-  const subColor = tone === "danger" ? "var(--danger)" : tone === "warning" ? "var(--warning)"
-    : tone === "success" ? "var(--success)" : "var(--text-3)";
+  const subColor =
+    tone === "danger"
+      ? "var(--danger)"
+      : tone === "warning"
+        ? "var(--warning)"
+        : tone === "success"
+          ? "var(--success)"
+          : "var(--text-3)";
   return (
     <Card padding="16px 18px">
       <Eyebrow>{label}</Eyebrow>

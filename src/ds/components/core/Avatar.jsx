@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * Lätto Avatar — circular identity token. Renders an image when `src` is
  * given, otherwise initials on a deterministic warm-neutral background.

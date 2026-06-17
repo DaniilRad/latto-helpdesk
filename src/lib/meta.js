@@ -1,105 +1,120 @@
 // Domain metadata — device types, statuses, ticketing, SLA, helpers.
 import {
-  Monitor, Laptop, Smartphone, Printer, ScanLine, Tv, Network, Keyboard, Server,
-  Container, PlugZap,
+  Container,
+  Keyboard,
+  Laptop,
+  Monitor,
+  Network,
+  PlugZap,
+  Printer,
+  ScanLine,
+  Server,
+  Smartphone,
+  Tv,
 } from "lucide-react";
 
 export const DEVICE_TYPES = {
-  pc:         { label: "PC",         icon: Monitor,    color: "var(--accent)" },
-  notebook:   { label: "Notebook",   icon: Laptop,     color: "var(--info)" },
-  mobile:     { label: "Mobile",     icon: Smartphone, color: "var(--success)" },
-  server:     { label: "Server",     icon: Server,     color: "var(--danger)" },
-  printer:    { label: "Printer",    icon: Printer,    color: "var(--violet, #a78bfa)" },
-  scanner:    { label: "Scanner",    icon: ScanLine,   color: "var(--warning)" },
-  monitor:    { label: "Monitor",    icon: Tv,         color: "var(--text-2)" },
-  network:    { label: "Network",    icon: Network,    color: "var(--danger)" },
-  rack:       { label: "Rack",       icon: Container,  color: "var(--text-2)" },
-  pdu:        { label: "PDU",        icon: PlugZap,    color: "var(--warning)" },
-  peripheral: { label: "Peripheral", icon: Keyboard,   color: "var(--text-3)" },
+  pc: { label: "PC", icon: Monitor, color: "var(--accent)" },
+  notebook: { label: "Notebook", icon: Laptop, color: "var(--info)" },
+  mobile: { label: "Mobile", icon: Smartphone, color: "var(--success)" },
+  server: { label: "Server", icon: Server, color: "var(--danger)" },
+  printer: { label: "Printer", icon: Printer, color: "var(--violet, #a78bfa)" },
+  scanner: { label: "Scanner", icon: ScanLine, color: "var(--warning)" },
+  monitor: { label: "Monitor", icon: Tv, color: "var(--text-2)" },
+  network: { label: "Network", icon: Network, color: "var(--danger)" },
+  rack: { label: "Rack", icon: Container, color: "var(--text-2)" },
+  pdu: { label: "PDU", icon: PlugZap, color: "var(--warning)" },
+  peripheral: { label: "Peripheral", icon: Keyboard, color: "var(--text-3)" },
 };
 
 export const CONSUMABLE_TYPES = {
   toner: { label: "Toner" },
   cable: { label: "Cable" },
-  sim:   { label: "SIM card" },
+  sim: { label: "SIM card" },
   other: { label: "Other" },
 };
 
 export const CONTRACT_TYPES = {
-  contract:    { label: "Contract",    tone: "info" },
+  contract: { label: "Contract", tone: "info" },
   certificate: { label: "Certificate", tone: "accent" },
 };
 
 export const DEVICE_STATUS = {
-  "in-use":   { label: "In use",   tone: "success" },
+  "in-use": { label: "In use", tone: "success" },
   "in-stock": { label: "In stock", tone: "info" },
-  repair:     { label: "Repair",   tone: "warning" },
-  retired:    { label: "Retired",  tone: "neutral" },
+  repair: { label: "Repair", tone: "warning" },
+  retired: { label: "Retired", tone: "neutral" },
 };
 
 export const USER_STATUS = {
-  enabled:  { label: "Enabled",  tone: "success" },
+  enabled: { label: "Enabled", tone: "success" },
   disabled: { label: "Disabled", tone: "neutral" },
-  locked:   { label: "Locked",   tone: "danger" },
+  locked: { label: "Locked", tone: "danger" },
 };
 
 /* ============ Ticketing ============ */
 
 export const TICKET_STATUS = {
-  new:           { label: "New",         tone: "info" },
-  assigned:      { label: "Assigned",    tone: "accent" },
+  new: { label: "New", tone: "info" },
+  assigned: { label: "Assigned", tone: "accent" },
   "in-progress": { label: "In progress", tone: "accent" },
-  waiting:       { label: "Waiting",     tone: "warning" },
-  resolved:      { label: "Resolved",    tone: "success" },
-  closed:        { label: "Closed",      tone: "neutral" },
+  waiting: { label: "Waiting", tone: "warning" },
+  resolved: { label: "Resolved", tone: "success" },
+  closed: { label: "Closed", tone: "neutral" },
 };
 export const OPEN_STATUSES = ["new", "assigned", "in-progress", "waiting"];
 
 export const PROBLEM_STATUS = {
-  open:          { label: "Open",          tone: "info" },
+  open: { label: "Open", tone: "info" },
   investigating: { label: "Investigating", tone: "accent" },
-  "known-error": { label: "Known error",   tone: "warning" },
-  resolved:      { label: "Resolved",      tone: "success" },
-  closed:        { label: "Closed",        tone: "neutral" },
+  "known-error": { label: "Known error", tone: "warning" },
+  resolved: { label: "Resolved", tone: "success" },
+  closed: { label: "Closed", tone: "neutral" },
 };
 export const PROBLEM_OPEN_STATUSES = ["open", "investigating", "known-error"];
 
 export const TICKET_CATEGORIES = {
   incident: { label: "Incident" },
-  request:  { label: "Service request" },
+  request: { label: "Service request" },
   question: { label: "Question" },
-  change:   { label: "Change" },
+  change: { label: "Change" },
 };
 
 export const LEVELS = {
-  low:    { label: "Low" },
+  low: { label: "Low" },
   medium: { label: "Medium" },
-  high:   { label: "High" },
+  high: { label: "High" },
 };
 
 /** GLPI-style priority matrix: impact × urgency → P1..P5. */
 const MATRIX = {
-  "high:high": 1, "high:medium": 2, "medium:high": 2,
-  "high:low": 3, "medium:medium": 3, "low:high": 3,
-  "medium:low": 4, "low:medium": 4, "low:low": 5,
+  "high:high": 1,
+  "high:medium": 2,
+  "medium:high": 2,
+  "high:low": 3,
+  "medium:medium": 3,
+  "low:high": 3,
+  "medium:low": 4,
+  "low:medium": 4,
+  "low:low": 5,
 };
 export const computePriority = (impact, urgency) => MATRIX[`${impact}:${urgency}`] ?? 3;
 
 export const PRIORITY = {
   1: { label: "P1 · Critical", short: "P1", tone: "danger" },
-  2: { label: "P2 · High",     short: "P2", tone: "warning" },
-  3: { label: "P3 · Medium",   short: "P3", tone: "accent" },
-  4: { label: "P4 · Low",      short: "P4", tone: "info" },
+  2: { label: "P2 · High", short: "P2", tone: "warning" },
+  3: { label: "P3 · Medium", short: "P3", tone: "accent" },
+  4: { label: "P4 · Low", short: "P4", tone: "info" },
   5: { label: "P5 · Planning", short: "P5", tone: "neutral" },
 };
 
 /** SLA targets per priority, in hours: time to respond / time to resolve. */
 export const SLA_CONFIG = {
   1: { respond: 0.5, resolve: 4 },
-  2: { respond: 1,   resolve: 8 },
-  3: { respond: 4,   resolve: 24 },
-  4: { respond: 8,   resolve: 72 },
-  5: { respond: 24,  resolve: 120 },
+  2: { respond: 1, resolve: 8 },
+  3: { respond: 4, resolve: 24 },
+  4: { respond: 8, resolve: 72 },
+  5: { respond: 24, resolve: 120 },
 };
 export const SLA_WARN_FRACTION = 0.8;
 

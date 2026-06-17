@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+# Manual deploy only ("Run workflow" button in the Actions tab).
+# Nothing auto-deploys on push — flip this to an `on: push` trigger later
+# if you want continuous deployment from main.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deploy at a time; let a newer run supersede an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # BrowserRouter deep links (e.g. /latto-helpdesk/tickets) have no static
+      # file; serving the SPA shell as 404.html lets the client router resolve them.
+      - name: SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4

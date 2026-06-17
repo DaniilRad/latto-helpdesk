@@ -1,12 +1,20 @@
 import React from "react";
 import { Dialog, Input, Select } from "../ds";
-import { Field } from "./bits.jsx";
 import { USER_STATUS } from "../lib/meta.js";
 import { useStore } from "../lib/store.jsx";
+import { Field } from "./bits.jsx";
 
 const EMPTY = {
-  displayName: "", sam: "", email: "", department: "", title: "", phone: "",
-  status: "enabled", lastLogon: "", ou: "", groups: [],
+  displayName: "",
+  sam: "",
+  email: "",
+  department: "",
+  title: "",
+  phone: "",
+  status: "enabled",
+  lastLogon: "",
+  ou: "",
+  groups: [],
 };
 
 /** Add/edit AD user dialog. Pass `user` to edit, omit to create. */
@@ -37,7 +45,10 @@ export function UserDialog({ open, onClose, user }) {
     }
     const payload = {
       ...form,
-      groups: groupsText.split(",").map((g) => g.trim()).filter(Boolean),
+      groups: groupsText
+        .split(",")
+        .map((g) => g.trim())
+        .filter(Boolean),
     };
     if (editing) saveUser(user.id, payload, payload.sam);
     else addUser(payload);
@@ -45,21 +56,28 @@ export function UserDialog({ open, onClose, user }) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} width={620}
+    <Dialog
+      open={open}
+      onClose={onClose}
+      width={620}
       title={editing ? `Edit ${user?.sam}` : "Add AD user"}
       description={editing ? undefined : "Track an Active Directory account."}
       actions={[
         { label: "Cancel", variant: "ghost", onClick: onClose },
         { label: editing ? "Save" : "Add user", variant: "primary", onClick: submit },
-      ]}>
+      ]}
+    >
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        <Field label="Display name" required
-          error={attempted && nameMissing ? "Display name is required" : null}>
-          <Input value={form.displayName} onChange={set("displayName")} placeholder="Anna Koval"
-            invalid={attempted && nameMissing} autoFocus />
+        <Field label="Display name" required error={attempted && nameMissing ? "Display name is required" : null}>
+          <Input
+            value={form.displayName}
+            onChange={set("displayName")}
+            placeholder="Anna Koval"
+            invalid={attempted && nameMissing}
+            autoFocus
+          />
         </Field>
-        <Field label="sAMAccountName" required
-          error={attempted && samMissing ? "Account name is required" : null}>
+        <Field label="sAMAccountName" required error={attempted && samMissing ? "Account name is required" : null}>
           <Input value={form.sam} onChange={set("sam")} placeholder="a.koval" invalid={attempted && samMissing} />
         </Field>
         <Field label="Email">
@@ -75,15 +93,22 @@ export function UserDialog({ open, onClose, user }) {
           <Input value={form.title} onChange={set("title")} placeholder="Accountant" />
         </Field>
         <Field label="Account status">
-          <Select value={form.status} onChange={set("status")} style={{ width: "100%" }}
-            options={Object.entries(USER_STATUS).map(([v, s]) => ({ value: v, label: s.label }))} />
+          <Select
+            value={form.status}
+            onChange={set("status")}
+            style={{ width: "100%" }}
+            options={Object.entries(USER_STATUS).map(([v, s]) => ({ value: v, label: s.label }))}
+          />
         </Field>
         <Field label="Organizational unit">
           <Input value={form.ou} onChange={set("ou")} placeholder="OU=Finance,DC=latto,DC=io" />
         </Field>
         <Field label="AD groups (comma-separated)" span={2}>
-          <Input value={groupsText} onChange={(e) => setGroupsText(e.target.value)}
-            placeholder="Domain Users, Finance, VPN Users" />
+          <Input
+            value={groupsText}
+            onChange={(e) => setGroupsText(e.target.value)}
+            placeholder="Domain Users, Finance, VPN Users"
+          />
         </Field>
       </div>
     </Dialog>

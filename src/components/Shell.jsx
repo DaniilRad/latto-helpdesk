@@ -1,17 +1,34 @@
-import React from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard, Ticket, MonitorSmartphone, Users, ShieldCheck, Settings,
-  Moon, Sunset, Sun, BookOpen, Package, UserCog, CalendarDays, Droplets,
-  FileSignature, Globe, CalendarClock, Building2, Boxes, Workflow,
+  BookOpen,
+  Boxes,
+  Building2,
+  CalendarClock,
+  CalendarDays,
+  Droplets,
+  FileSignature,
+  Globe,
+  LayoutDashboard,
+  MonitorSmartphone,
+  Moon,
+  Package,
+  Settings,
+  ShieldCheck,
+  Sun,
+  Sunset,
+  Ticket,
+  UserCog,
+  Users,
+  Workflow,
 } from "lucide-react";
-import { NavItem, Avatar, IconButton, Toast, Badge, Select } from "../ds";
+import React from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Avatar, Badge, IconButton, NavItem, Select, Toast } from "../ds";
+import markUrl from "../ds/assets/latto-mark-amber.svg";
+import { OPEN_STATUSES, PROBLEM_OPEN_STATUSES, slaState } from "../lib/meta.js";
+import { ROLES } from "../lib/rbac.js";
+import { useStore } from "../lib/store.jsx";
 import { Eyebrow } from "./bits.jsx";
 import { SearchPalette } from "./SearchPalette.jsx";
-import { useStore } from "../lib/store.jsx";
-import { ROLES } from "../lib/rbac.js";
-import { OPEN_STATUSES, PROBLEM_OPEN_STATUSES, slaState } from "../lib/meta.js";
-import markUrl from "../ds/assets/latto-mark-amber.svg";
 
 function Sidebar() {
   const nav = useNavigate();
@@ -28,8 +45,13 @@ function Sidebar() {
       title: null,
       items: [
         { to: "/", icon: LayoutDashboard, label: "Overview", show: true },
-        { to: "/tickets", icon: Ticket, label: hasPerm("tickets.all") ? "Tickets" : "My tickets",
-          badge: hasPerm("tickets.all") ? allOpen.length : (myOpen.length || null), show: true },
+        {
+          to: "/tickets",
+          icon: Ticket,
+          label: hasPerm("tickets.all") ? "Tickets" : "My tickets",
+          badge: hasPerm("tickets.all") ? allOpen.length : myOpen.length || null,
+          show: true,
+        },
         { to: "/problems", icon: Boxes, label: "Problems", badge: openProblems || null, show: hasPerm("tickets.all") },
         { to: "/planning", icon: CalendarDays, label: "Planning", show: hasPerm("tickets.all") },
         { to: "/kb", icon: BookOpen, label: "Knowledge base", show: true },
@@ -38,9 +60,21 @@ function Sidebar() {
     {
       title: "INVENTORY",
       items: [
-        { to: "/devices", icon: MonitorSmartphone, label: "Devices", badge: devices.length, show: hasPerm("devices.read") },
+        {
+          to: "/devices",
+          icon: MonitorSmartphone,
+          label: "Devices",
+          badge: devices.length,
+          show: hasPerm("devices.read"),
+        },
         { to: "/software", icon: Package, label: "Software", show: hasPerm("devices.read") },
-        { to: "/consumables", icon: Droplets, label: "Consumables", badge: lowStock || null, show: hasPerm("devices.read") },
+        {
+          to: "/consumables",
+          icon: Droplets,
+          label: "Consumables",
+          badge: lowStock || null,
+          show: hasPerm("devices.read"),
+        },
         { to: "/contracts", icon: FileSignature, label: "Contracts & certs", show: hasPerm("devices.read") },
         { to: "/infrastructure", icon: Globe, label: "Infrastructure", show: hasPerm("devices.read") },
         { to: "/reservations", icon: CalendarClock, label: "Reservations", show: true },
@@ -62,23 +96,50 @@ function Sidebar() {
   const isActive = (to) => (to === "/" ? loc.pathname === "/" : loc.pathname.startsWith(to));
 
   return (
-    <aside style={{ width: 248, flex: "0 0 auto", borderRight: "1px solid var(--border)",
-      background: "var(--surface-1)", display: "flex", flexDirection: "column", height: "100%" }}>
+    <aside
+      style={{
+        width: 248,
+        flex: "0 0 auto",
+        borderRight: "1px solid var(--border)",
+        background: "var(--surface-1)",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "16px 16px 12px" }}>
         <img src={markUrl} width="28" height="28" style={{ borderRadius: "var(--radius-sm)" }} alt="" />
         <span style={{ fontWeight: 900, fontSize: 18, letterSpacing: "-0.02em", color: "var(--text-1)" }}>
           Helpdesk hub
         </span>
-        <span style={{ marginLeft: "auto", fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-3)",
-          border: "1px solid var(--border)", padding: "2px 6px", borderRadius: 6 }}>v0.3</span>
+        <span
+          style={{
+            marginLeft: "auto",
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            color: "var(--text-3)",
+            border: "1px solid var(--border)",
+            padding: "2px 6px",
+            borderRadius: 6,
+          }}
+        >
+          v0.3
+        </span>
       </div>
-      <div style={{ padding: "0 10px 10px", display: "flex", flexDirection: "column", gap: 2, flex: 1, overflowY: "auto" }}>
+      <div
+        style={{ padding: "0 10px 10px", display: "flex", flexDirection: "column", gap: 2, flex: 1, overflowY: "auto" }}
+      >
         {sections.map((s, si) => (
           <React.Fragment key={si}>
             {s.title && <Eyebrow style={{ padding: "12px 12px 4px", fontSize: 10 }}>{s.title}</Eyebrow>}
             {s.items.map((it) => (
-              <NavItem key={it.to} icon={<it.icon size={18} />} badge={it.badge || undefined}
-                active={isActive(it.to)} onClick={() => nav(it.to)}>
+              <NavItem
+                key={it.to}
+                icon={<it.icon size={18} />}
+                badge={it.badge || undefined}
+                active={isActive(it.to)}
+                onClick={() => nav(it.to)}
+              >
                 {it.label}
               </NavItem>
             ))}
@@ -89,8 +150,18 @@ function Sidebar() {
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 8px" }}>
           <Avatar name={persona.displayName} size={32} status="online" />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 13, color: "var(--text-1)", fontWeight: 500, overflow: "hidden",
-              textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{persona.displayName}</div>
+            <div
+              style={{
+                fontSize: 13,
+                color: "var(--text-1)",
+                fontWeight: 500,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {persona.displayName}
+            </div>
             <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
               {ROLES[personaRole]?.label.toLowerCase()}
             </div>
@@ -103,8 +174,19 @@ function Sidebar() {
 
 function Topbar() {
   const {
-    theme, setTheme, tickets, users, entities, persona, setPersona, roleOf, hasPerm,
-    personaIsStaff, entityFilter, setEntityFilter, slaConfig,
+    theme,
+    setTheme,
+    tickets,
+    users,
+    entities,
+    persona,
+    setPersona,
+    roleOf,
+    hasPerm,
+    personaIsStaff,
+    entityFilter,
+    setEntityFilter,
+    slaConfig,
   } = useStore();
   const themeIcons = { dark: Moon, dusk: Sunset, light: Sun };
   const ThemeIcon = themeIcons[theme] || Moon;
@@ -121,14 +203,34 @@ function Topbar() {
     .map((u) => ({ value: u.id, label: `${u.displayName} · ${ROLES[roleOf(u).role]?.label}` }));
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 22px",
-      borderBottom: "1px solid var(--border)",
-      background: "color-mix(in srgb, var(--bg) 80%, transparent)", backdropFilter: "blur(12px)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-mono)",
-        fontSize: 13, color: "var(--text-3)" }}>
-        <span>latto.io</span><span>/</span><span style={{ color: "var(--text-1)" }}>helpdesk</span>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        padding: "12px 22px",
+        borderBottom: "1px solid var(--border)",
+        background: "color-mix(in srgb, var(--bg) 80%, transparent)",
+        backdropFilter: "blur(12px)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          fontFamily: "var(--font-mono)",
+          fontSize: 13,
+          color: "var(--text-3)",
+        }}
+      >
+        <span>latto.io</span>
+        <span>/</span>
+        <span style={{ color: "var(--text-1)" }}>helpdesk</span>
         {hasPerm("tickets.all") && breached.length > 0 && (
-          <Badge tone="danger" dot pulse style={{ marginLeft: 6 }}>{breached.length} SLA breached</Badge>
+          <Badge tone="danger" dot pulse style={{ marginLeft: 6 }}>
+            {breached.length} SLA breached
+          </Badge>
         )}
       </div>
       <div style={{ flex: 1 }} />
@@ -136,18 +238,31 @@ function Topbar() {
       {personaIsStaff && entities.length > 1 && (
         <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
           <Building2 size={15} style={{ color: "var(--text-3)" }} />
-          <Select size="sm" value={entityFilter} onChange={(e) => setEntityFilter(e.target.value)}
+          <Select
+            size="sm"
+            value={entityFilter}
+            onChange={(e) => setEntityFilter(e.target.value)}
             style={{ width: 150 }}
-            options={[{ value: "all", label: "All entities" },
-              ...entities.map((en) => ({ value: en.id, label: en.name }))]} />
+            options={[
+              { value: "all", label: "All entities" },
+              ...entities.map((en) => ({ value: en.id, label: en.name })),
+            ]}
+          />
         </span>
       )}
       <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
         <UserCog size={15} style={{ color: "var(--text-3)" }} title="View as" />
-        <Select size="sm" value={persona.id} onChange={(e) => setPersona(e.target.value)}
-          style={{ width: 210 }} options={personaOptions} />
+        <Select
+          size="sm"
+          value={persona.id}
+          onChange={(e) => setPersona(e.target.value)}
+          style={{ width: 210 }}
+          options={personaOptions}
+        />
       </span>
-      <IconButton label="Toggle theme" variant="surface" onClick={cycle}><ThemeIcon size={18} /></IconButton>
+      <IconButton label="Toggle theme" variant="surface" onClick={cycle}>
+        <ThemeIcon size={18} />
+      </IconButton>
     </div>
   );
 }
@@ -156,8 +271,17 @@ function ToastStack() {
   const { toasts, dismissToast } = useStore();
   if (toasts.length === 0) return null;
   return (
-    <div style={{ position: "fixed", right: 20, bottom: 20, zIndex: 2000,
-      display: "flex", flexDirection: "column", gap: 10 }}>
+    <div
+      style={{
+        position: "fixed",
+        right: 20,
+        bottom: 20,
+        zIndex: 2000,
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+      }}
+    >
       {toasts.map((t) => (
         <Toast key={t.id} tone={t.tone} title={t.title} message={t.message} onClose={() => dismissToast(t.id)} />
       ))}

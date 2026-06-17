@@ -7,12 +7,13 @@ import React from "react";
 export function Tooltip({ label, side = "top", children, style = {} }) {
   const [show, setShow] = React.useState(false);
   const pos = {
-    top:    { bottom: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)" },
+    top: { bottom: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)" },
     bottom: { top: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)" },
-    left:   { right: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" },
-    right:  { left: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" },
+    left: { right: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" },
+    right: { left: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" },
   };
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: non-interactive wrapper whose hover/focus only reveals the tooltip; the trigger lives in `children`.
     <span
       style={{ position: "relative", display: "inline-flex", ...style }}
       onMouseEnter={() => setShow(true)}
@@ -43,7 +44,7 @@ export function Tooltip({ label, side = "top", children, style = {} }) {
           }}
         >
           {label}
-          <style>{`@keyframes latto-tip{from{opacity:0;transform:${(pos[side].transform||"")} translateY(2px)}to{opacity:1}}`}</style>
+          <style>{`@keyframes latto-tip{from{opacity:0;transform:${pos[side].transform || ""} translateY(2px)}to{opacity:1}}`}</style>
         </span>
       )}
     </span>

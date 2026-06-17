@@ -1,8 +1,8 @@
+import { Check, ChevronLeft, ChevronRight, Maximize2, Plus, SlidersHorizontal, X } from "lucide-react";
 import React from "react";
-import { SlidersHorizontal, Check, Plus, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
-import { Button, Card } from "../ds";
-import { PageHeader, Eyebrow } from "../components/bits.jsx";
+import { Eyebrow, PageHeader } from "../components/bits.jsx";
 import { WIDGETS } from "../components/widgets.jsx";
+import { Button, Card } from "../ds";
 import { useStore } from "../lib/store.jsx";
 import { Portal } from "./Portal.jsx";
 
@@ -32,14 +32,20 @@ function TechDashboard() {
 
   return (
     <>
-      <PageHeader eyebrow="HELPDESK · OVERVIEW" title="Good shift"
+      <PageHeader
+        eyebrow="HELPDESK · OVERVIEW"
+        title="Good shift"
         actions={
-          <Button variant={editing ? "primary" : "secondary"} size="sm"
+          <Button
+            variant={editing ? "primary" : "secondary"}
+            size="sm"
             iconLeft={editing ? <Check size={15} /> : <SlidersHorizontal size={15} />}
-            onClick={() => setEditing((e) => !e)}>
+            onClick={() => setEditing((e) => !e)}
+          >
             {editing ? "Done" : "Customize"}
           </Button>
-        } />
+        }
+      />
 
       {editing && unused.length > 0 && (
         <Card padding="14px 18px" style={{ marginBottom: 16 }}>
@@ -61,23 +67,68 @@ function TechDashboard() {
           return (
             <div key={w.key} style={{ gridColumn: `span ${Math.min(w.size, 4)}`, position: "relative", minWidth: 0 }}>
               {editing && (
-                <div style={{ position: "absolute", top: 6, right: 6, zIndex: 5, display: "flex", gap: 2,
-                  background: "var(--surface-1)", border: "1px solid var(--border)",
-                  borderRadius: "var(--radius-md)", padding: 2, boxShadow: "var(--shadow-md)" }}>
-                  <Button variant="ghost" size="sm" disabled={idx === 0} onClick={() => move(idx, -1)}
-                    style={{ padding: "0 6px" }}><ChevronLeft size={14} /></Button>
-                  <Button variant="ghost" size="sm" disabled={idx === layout.length - 1} onClick={() => move(idx, 1)}
-                    style={{ padding: "0 6px" }}><ChevronRight size={14} /></Button>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 6,
+                    right: 6,
+                    zIndex: 5,
+                    display: "flex",
+                    gap: 2,
+                    background: "var(--surface-1)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius-md)",
+                    padding: 2,
+                    boxShadow: "var(--shadow-md)",
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={idx === 0}
+                    onClick={() => move(idx, -1)}
+                    style={{ padding: "0 6px" }}
+                  >
+                    <ChevronLeft size={14} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={idx === layout.length - 1}
+                    onClick={() => move(idx, 1)}
+                    style={{ padding: "0 6px" }}
+                  >
+                    <ChevronRight size={14} />
+                  </Button>
                   {def.sizes.length > 1 && (
-                    <Button variant="ghost" size="sm" onClick={() => resize(idx)} title="Cycle size"
-                      style={{ padding: "0 6px" }}><Maximize2 size={13} /></Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => resize(idx)}
+                      title="Cycle size"
+                      style={{ padding: "0 6px" }}
+                    >
+                      <Maximize2 size={13} />
+                    </Button>
                   )}
-                  <Button variant="ghost" size="sm" onClick={() => remove(w.key)}
-                    style={{ padding: "0 6px", color: "var(--danger)" }}><X size={14} /></Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => remove(w.key)}
+                    style={{ padding: "0 6px", color: "var(--danger)" }}
+                  >
+                    <X size={14} />
+                  </Button>
                 </div>
               )}
-              <div style={{ height: "100%", outline: editing ? "1px dashed var(--border-strong)" : "none",
-                outlineOffset: 3, borderRadius: "var(--radius-lg)" }}>
+              <div
+                style={{
+                  height: "100%",
+                  outline: editing ? "1px dashed var(--border-strong)" : "none",
+                  outlineOffset: 3,
+                  borderRadius: "var(--radius-lg)",
+                }}
+              >
                 <Comp />
               </div>
             </div>

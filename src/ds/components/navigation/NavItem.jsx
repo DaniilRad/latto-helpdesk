@@ -4,15 +4,7 @@ import React from "react";
  * Lätto NavItem — a sidebar navigation row: icon + label, with an active
  * state (amber-soft well + accent text) and an optional trailing badge/count.
  */
-export function NavItem({
-  icon = null,
-  children,
-  active = false,
-  badge = null,
-  as = "button",
-  style = {},
-  ...rest
-}) {
+export function NavItem({ icon = null, children, active = false, badge = null, as = "button", style = {}, ...rest }) {
   const As = as;
   const [hover, setHover] = React.useState(false);
   return (
@@ -41,7 +33,9 @@ export function NavItem({
       {...rest}
     >
       {icon && <span style={{ display: "inline-flex", flex: "0 0 auto" }}>{icon}</span>}
-      <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{children}</span>
+      <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        {children}
+      </span>
       {badge != null && (
         <span
           style={{

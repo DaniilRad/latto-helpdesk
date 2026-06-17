@@ -12,7 +12,7 @@ export function CodeBlock({ code = "", filename, lang = "txt", style = {}, ...re
       navigator.clipboard.writeText(code);
       setCopied(true);
       setTimeout(() => setCopied(false), 1400);
-    } catch (e) {}
+    } catch (_e) {}
   };
   return (
     <div
@@ -44,15 +44,26 @@ export function CodeBlock({ code = "", filename, lang = "txt", style = {}, ...re
             type="button"
             onClick={copy}
             style={{
-              display: "inline-flex", alignItems: "center", gap: 6,
-              border: "none", background: "transparent", cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
               color: copied ? "var(--success)" : "var(--text-3)",
-              fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)",
-              letterSpacing: "var(--tracking-wide)", textTransform: "uppercase",
-              padding: "2px 6px", borderRadius: "var(--radius-sm)",
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-xs)",
+              letterSpacing: "var(--tracking-wide)",
+              textTransform: "uppercase",
+              padding: "2px 6px",
+              borderRadius: "var(--radius-sm)",
             }}
-            onMouseEnter={(e) => { if (!copied) e.currentTarget.style.color = "var(--text-1)"; }}
-            onMouseLeave={(e) => { if (!copied) e.currentTarget.style.color = "var(--text-3)"; }}
+            onMouseEnter={(e) => {
+              if (!copied) e.currentTarget.style.color = "var(--text-1)";
+            }}
+            onMouseLeave={(e) => {
+              if (!copied) e.currentTarget.style.color = "var(--text-3)";
+            }}
           >
             {copied ? "Copied" : "Copy"}
           </button>
